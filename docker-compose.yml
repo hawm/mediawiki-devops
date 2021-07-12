@@ -6,12 +6,14 @@ services:
     restart: always
     env_file: 
       - .env
+    environment: 
+      - MW_INSTALL_PATH=/var/www/html
     volumes:
       # uploads
       - images:/var/www/html/images
-      - ./mymw:/var/www/html/mymw
-      - ./mymw/.htaccess:/var/www/html/.htaccess
-      - ./mymw/LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./mediawiki/extensions/*:/var/www/html/extensions
+      - ./mediawiki/.htaccess:/var/www/html/.htaccess
+      - ./mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
     labels: 
       - traefik.enable=true
       - traefik.http.routers.mediawiki.rule=Host(`${MW_HOST}`)
