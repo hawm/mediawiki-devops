@@ -39,7 +39,7 @@ services:
       - 443:443
     command:
       # uncomment below for test/dev
-      - --log.level=DEBUG
+      #- --log.level=DEBUG
       # provider
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
