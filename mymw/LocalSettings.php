@@ -23,6 +23,6 @@ foreach(glob("$IP/mymw/settings/*.php") as $setting){
 # Load custom extension/skin
 # change extension dir
 $wgExtensionDirectory = "$IP/mymw/extensions";
-foreach(glob("$IP/mymw/settings/{Skin,Extension}/*.php", GLOB_BRACE) as $setting){
+foreach(glob("$IP/mymw/settings/{skins,extensions}/*.php", GLOB_BRACE) as $setting){
 	require $setting;
 }
