@@ -6,14 +6,18 @@ services:
     restart: always
     env_file: 
       - .env
-    environment: 
-      - MW_INSTALL_PATH=/var/www/html
     volumes:
       # uploads
       - images:/var/www/html/images
-      - ./mediawiki/extensions/*:/var/www/html/extensions
-      - ./mediawiki/.htaccess:/var/www/html/.htaccess
-      - ./mediawiki/LocalSettings.php:/var/www/html/LocalSettings.php
+      # extensions
+      - ./mediawiki/extensions/DiscourseConnect:${MW_INSTALL_PATH}/extensions/DiscourseConnect
+      # skins
+      #- ./mediaiwki/skins/skin-name:${MW_INSTALL_PATH}/skins/skin-name
+      # settings
+      - ./mediawiki/settings:${MW_INSTALL_PATH}/settings
+      - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
+      # apache
+      - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess
     labels: 
       - traefik.enable=true
       - traefik.http.routers.mediawiki.rule=Host(`${MW_HOST}`)
