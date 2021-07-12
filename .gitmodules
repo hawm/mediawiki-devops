@@ -1,0 +1,3 @@
+[submodule "mymw/extensions/DiscourseConnect"]
+	path = mymw/extensions/DiscourseConnect
+	url = https://github.com/hawm/mediawiki-extensions-DiscourseConnect.git
