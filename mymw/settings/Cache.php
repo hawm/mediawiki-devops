@@ -1,0 +1,2 @@
+<?php
+$wgCachePages = false;

@@ -1,0 +1,86 @@
+version: "3"
+
+services:
+  mediawiki:
+    image: mediawiki:1.36
+    restart: always
+    env_file: 
+      - .env
+    volumes:
+      # uploads
+      - images:/var/www/html/images
+      - ./mymw:/var/www/html/mymw
+      - ./mymw/.htaccess:/var/www/html/.htaccess
+      - ./mymw/LocalSettings.php:/var/www/html/LocalSettings.php
+    labels: 
+      - traefik.enable=true
+      - traefik.http.routers.mediawiki.rule=Host(`${MW_HOST}`)
+      - traefik.http.routers.mediawiki.entrypoints=websecure
+      - traefik.http.routers.mediawiki.tls=true
+      - traefik.http.routers.mediawiki.tls.certresolver=myresolver
+
+  database:
+    image: mariadb
+    restart: always
+    environment:
+      # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
+      MYSQL_DATABASE: mediawiki
+      MYSQL_USER: mediawiki
+      MYSQL_PASSWORD: mediawiki
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - database:/var/lib/mysql
+  
+  traefik:
+    image: traefik:latest
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    command:
+      # uncomment below for test/dev
+      - --log.level=DEBUG
+      # provider
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      # entrypoint
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      # cert
+      - --certificatesresolvers.myresolver.acme.tlschallenge=true
+      - --certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.myresolver.acme.storage=/var/letsencrypt/acme.json
+      # uncomment below for test/dev
+      #- --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      # dashboard
+      - --api.dashboard=true
+    labels: 
+      # dashboard
+      - traefik.enable=true
+      - traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_HOST}`)
+      - traefik.http.routers.dashboard.service=api@internal
+      - traefik.http.routers.dashboard.entrypoints=websecure
+      - traefik.http.routers.dashboard.tls=true
+      - traefik.http.routers.dashboard.tls.certresolver=myresolver
+      - traefik.http.routers.dashboard.middlewares=auth
+      - traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/var/letsencrypt
+
+  manager:
+    image: ubuntu:latest
+    profiles:
+      - manager
+    volumes:
+      - database:/var/mediawiki/database
+      - images:/var/mediawiki/images
+      - letsencrypt:/var/traefik/letsencrypt
+      - ./backups:/var/mybackups
+
+volumes:
+  database:
+  images:
+  letsencrypt:
