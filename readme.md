@@ -46,7 +46,7 @@ docker-compose run --rm manager tar xvf /var/mybackups/mediawiki-${VERSION}.tar 
 #### backup
 
 ```sh
-docker-compose run --rm manager tar cvf /var/mybackups/letsencrypt-$(date '+%Y%m%d%H%M%S').tar -C /var/letsencrypt .
+docker-compose run --rm manager tar cvf /var/mybackups/letsencrypt-$(date '+%Y%m%d%H%M%S').tar -C /var/traefik/letsencrypt .
 ```
 
 #### restore
