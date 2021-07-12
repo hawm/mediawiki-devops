@@ -1,2 +1,2 @@
 <?php
-$wgCachePages = false;
+$wgMainCacheType=CACHE_NONE;

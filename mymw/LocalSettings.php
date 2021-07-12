@@ -15,11 +15,14 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-# load extension before change extension dir
-require "$IP/mymw/settings/Extension.php";
+# Load setting files
+foreach(glob("$IP/mymw/settings/*.php") as $setting){
+	require $setting;
+}
+
+# Load custom extension/skin
 # change extension dir
 $wgExtensionDirectory = "$IP/mymw/extensions";
-# Load setting files
-foreach(glob("$IP/mymw/settings/[!{Extension}]*.php") as $setting){
+foreach(glob("$IP/mymw/settings/{Skin,Extension}/*.php", GLOB_BRACE) as $setting){
 	require $setting;
 }
