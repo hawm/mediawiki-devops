@@ -33,7 +33,7 @@ All data volumes are mount into `manager` container, and bind mount `backups` fo
 #### backup
 
 ```sh
-docker-compose run --rm manager tar cvf /var/mybackups/mediawiki-$(date '+%Y%m%d%H%M%S').tar -C /var/mediawiki .
+docker-compose run --rm manager tar cvf /var/mybackups/mediawiki-$(date --utc +%Y%m%d%H%M%S).tar -C /var/mediawiki .
 ```
 
 #### restore
@@ -46,7 +46,7 @@ docker-compose run --rm manager tar xvf /var/mybackups/mediawiki-${VERSION}.tar 
 #### backup
 
 ```sh
-docker-compose run --rm manager tar cvf /var/mybackups/letsencrypt-$(date '+%Y%m%d%H%M%S').tar -C /var/traefik/letsencrypt .
+docker-compose run --rm manager tar cvf /var/mybackups/letsencrypt-$(date --utc +%Y%m%d%H%M%S).tar -C /var/traefik/letsencrypt .
 ```
 
 #### restore
