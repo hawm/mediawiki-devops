@@ -7,4 +7,4 @@ RewriteRule ^/?title(/.*)?$ %{DOCUMENT_ROOT}/index.php [L]
 RewriteRule ^/*$ %{DOCUMENT_ROOT}/index.php [L]
 
 # debug
-php_flag opcache.enable Off
+# php_flag opcache.enable Off
