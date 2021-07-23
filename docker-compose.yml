@@ -4,13 +4,13 @@ services:
   mediawiki:
     image: mediawiki:1.36
     restart: always
-    env_file: 
+    env_file:
       - .env
     volumes:
       # uploads
       - images:/var/www/html/images
       # extensions
-      - ./mediawiki/extensions/DiscourseConnect:${MW_INSTALL_PATH}/extensions/DiscourseConnect
+      # - ./mediawiki/extensions/extension-name:${MW_INSTALL_PATH}/extensions/extension-name
       # skins
       #- ./mediaiwki/skins/skin-name:${MW_INSTALL_PATH}/skins/skin-name
       # settings
@@ -18,12 +18,16 @@ services:
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
       # apache
       - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess
-    labels: 
+    labels:
       - traefik.enable=true
       - traefik.http.routers.mediawiki.rule=Host(`${MW_HOST}`)
       - traefik.http.routers.mediawiki.entrypoints=websecure
       - traefik.http.routers.mediawiki.tls=true
       - traefik.http.routers.mediawiki.tls.certresolver=myresolver
+    networks:
+      - frontend
+      - backend
+      - ipv6
 
   database:
     image: mariadb
@@ -32,49 +36,33 @@ services:
       # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
       MYSQL_DATABASE: mediawiki
       MYSQL_USER: mediawiki
-      MYSQL_PASSWORD: mediawiki
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_PASSWORD: mediawikid
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
     volumes:
       - database:/var/lib/mysql
-  
+    networks:
+      - backend
+
   traefik:
     image: traefik:latest
     restart: always
     ports:
       - 80:80
       - 443:443
-    command:
-      # uncomment below for test/dev
-      #- --log.level=DEBUG
-      # provider
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      # entrypoint
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.web.http.redirections.entryPoint.to=websecure
-      - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      # cert
-      - --certificatesresolvers.myresolver.acme.tlschallenge=true
-      - --certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}
-      - --certificatesresolvers.myresolver.acme.storage=/var/letsencrypt/acme.json
-      # uncomment below for test/dev
-      #- --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
-      # dashboard
-      - --api.dashboard=true
-    labels: 
-      # dashboard
-      - traefik.enable=true
-      - traefik.http.routers.dashboard.rule=Host(`${TRAEFIK_HOST}`)
-      - traefik.http.routers.dashboard.service=api@internal
-      - traefik.http.routers.dashboard.entrypoints=websecure
-      - traefik.http.routers.dashboard.tls=true
-      - traefik.http.routers.dashboard.tls.certresolver=myresolver
-      - traefik.http.routers.dashboard.middlewares=auth
-      - traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}
-    volumes: 
+    environment:
+      TRAEFIK_PROVIDERS_DOCKER: "true"
+      TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT: "false"
+      TRAEFIK_PROVIDERS_DOCKER_NETWORK: wiki_frontend
+      TRAEFIK_ENTRYPOINTS_web_ADDRESS: :80
+      TRAEFIK_ENTRYPOINTS_websecure_ADDRESS: :443
+      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_TLSCHALLENGE: "true"
+      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_EMAIL: ${ACME_EMAIL}
+      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_STORAGE: /etc/traefik/acme/acme.json
+    volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - letsencrypt:/var/letsencrypt
+      - acme:/etc/traefik/acme
+    networks:
+      - frontend
 
   manager:
     image: ubuntu:latest
@@ -83,10 +71,22 @@ services:
     volumes:
       - database:/var/mediawiki/database
       - images:/var/mediawiki/images
-      - letsencrypt:/var/traefik/letsencrypt
+      - acme:/var/traefik/acme
       - ./backups:/var/mybackups
+
+networks:
+  frontend:
+    name: wiki_frontend
+  backend:
+    name: wiki_backend
+  ipv6:
+    name: wiki_ipv6
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: fd00:dead:beef::/48
 
 volumes:
   database:
   images:
-  letsencrypt:
+  acme:
