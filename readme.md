@@ -26,11 +26,13 @@ See `mymw/LocalSettings.php` for detail.
 `.env` store all our instance sensitive config, manually backup it.
 
 ## Application Data
-All data volumes are mount into `manager` container, and bind mount `backups` folder for saving backup to host, see the `manager` service in `docker-compose.yml` for detail.
+All data volumes are mount into `manager` container, and bind mount `backups` folder to `/var/mybackups` for saving backup to host, see the `manager` service in `docker-compose.yml` for detail.
 
 ### MediaWiki
 
 #### backup
+
+**Note the dot `.` at the end of command**
 
 ```sh
 docker-compose run --rm manager tar cvf /var/mybackups/mediawiki-$(date --utc +%Y%m%d%H%M%S).tar -C /var/mediawiki .
@@ -39,20 +41,6 @@ docker-compose run --rm manager tar cvf /var/mybackups/mediawiki-$(date --utc +%
 #### restore
 ```sh
 docker-compose run --rm manager tar xvf /var/mybackups/mediawiki-${VERSION}.tar -C /var/mediawiki
-```
-
-### Let's Encrypt
-
-#### backup
-
-```sh
-docker-compose run --rm manager tar cvf /var/mybackups/letsencrypt-$(date --utc +%Y%m%d%H%M%S).tar -C /var/traefik/letsencrypt .
-```
-
-#### restore
-
-```sh
-docker-compose run --rm manager tar xvf /var/mybackups/letsencrypt-${VERSION}.tar -C /var/traefik/letsencrypt
 ```
 
 ## Read More
