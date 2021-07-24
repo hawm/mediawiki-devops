@@ -2,7 +2,7 @@ version: "3"
 
 services:
   wiki:
-    image: mediawiki:1.36
+    build: .
     restart: always
     env_file:
       - .env
@@ -43,6 +43,17 @@ services:
     volumes:
       - wiki-data:/var/lib/mysql
     networks:
+      - backend
+
+  cache-redis:
+    image: redis:alpine
+    restart: always
+    volumes: 
+      - redis-data:/data
+      - ./redis:/var/redis
+    command:
+      - /var/redis/redis.conf
+    networks: 
       - backend
 
   reverse-proxy:
@@ -91,3 +102,4 @@ volumes:
   wiki-data:
   wiki-upload:
   acme:
+  redis-data:
