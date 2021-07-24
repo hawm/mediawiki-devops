@@ -10,7 +10,7 @@
 
   // The 'service' property is the name of the service for the container that VS Code should
   // use. Update this value and .devcontainer/docker-compose.yml to the real service name.
-  "service": "mediawiki",
+  "service": "wiki",
 
   // The optional 'workspaceFolder' property is the path VS Code should open by default when
   // connected. This is typically a file mount in .devcontainer/docker-compose.yml
@@ -33,7 +33,7 @@
   // "forwardPorts": [],
 
   // Uncomment the next line if you want start specific services in your Docker Compose config.
-  "runServices": ["database", "traefik"],
+  "runServices": ["database", "redis-cache", "reverse-proxy"],
 
   // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
   "shutdownAction": "none",
