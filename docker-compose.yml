@@ -18,6 +18,8 @@ services:
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
       # apache
       - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess
+      # robots
+      - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
     labels:
       - traefik.enable=true
       - traefik.http.routers.mediawiki.rule=Host(`${MW_HOST}`)
