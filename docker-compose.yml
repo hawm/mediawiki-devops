@@ -1,14 +1,14 @@
 version: "3"
 
 services:
-  mediawiki:
+  wiki:
     image: mediawiki:1.36
     restart: always
     env_file:
       - .env
     volumes:
       # uploads
-      - images:/var/www/html/images
+      - wiki-upload:/var/www/html/images
       # extensions
       # - ./mediawiki/extensions/extension-name:${MW_INSTALL_PATH}/extensions/extension-name
       # skins
@@ -41,11 +41,11 @@ services:
       MYSQL_PASSWORD: mediawiki
       MYSQL_ROOT_PASSWORD: mediawiki
     volumes:
-      - database:/var/lib/mysql
+      - wiki-data:/var/lib/mysql
     networks:
       - backend
 
-  traefik:
+  reverse-proxy:
     image: traefik:latest
     restart: always
     ports:
@@ -71,9 +71,8 @@ services:
     profiles:
       - manager
     volumes:
-      - database:/var/mediawiki/database
-      - images:/var/mediawiki/images
-      - acme:/var/traefik/acme
+      - wiki-data:/var/mediawiki/database
+      - wiki-upload:/var/mediawiki/upload
       - ./backups:/var/mybackups
 
 networks:
@@ -89,6 +88,6 @@ networks:
         - subnet: fd00:dead:beef::/48
 
 volumes:
-  database:
-  images:
+  wiki-data:
+  wiki-upload:
   acme:
