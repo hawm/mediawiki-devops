@@ -1,6 +1,3 @@
 <?php
-$wgMainCacheType = CACHE_MEMCACHED;
-$wgMemCachedServers = [
-    "memcached:11211"
-];
+$wgMainCacheType = CACHE_ACCEL;
 $wgCacheDirectory="$IP/cache";

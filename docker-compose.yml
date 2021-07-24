@@ -44,14 +44,6 @@ services:
       - database:/var/lib/mysql
     networks:
       - backend
-  
-  memcached:
-    image: memcached
-    restart: always
-    networks:
-      - backend
-    command: 
-      - -m 128
 
   traefik:
     image: traefik:latest
