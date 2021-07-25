@@ -22,10 +22,13 @@ services:
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
     labels:
       - traefik.enable=true
+      - traefik.http.routers.wiki-secure.rule=Host(`${MW_HOST}`)
+      - traefik.http.routers.wiki-secure.entrypoints=websecure
+      - traefik.http.routers.wiki-secure.tls=true
+      - traefik.http.routers.wiki-secure.tls.certresolver=myresolver
       - traefik.http.routers.wiki.rule=Host(`${MW_HOST}`)
-      - traefik.http.routers.wiki.entrypoints=websecure
-      - traefik.http.routers.wiki.tls=true
-      - traefik.http.routers.wiki.tls.certresolver=myresolver
+      - traefik.http.routers.wiki.entrypoints=web
+      - traefik.http.middlewares.wiki.redirectscheme.scheme=https
     networks:
       - frontend
       - backend
