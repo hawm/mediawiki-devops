@@ -3,9 +3,41 @@ version: "3"
 services:
   reverse-proxy:
     environment:
-      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_CASERVER: https://acme-staging-v02.api.letsencrypt.org/directory
       TRAEFIK_LOG_LEVEL: DEBUG
       TRAEFIK_API_DASHBOARD: "true"
       TRAEFIK_API_INSECURE: "true"
-    ports: 
+      LEGO_CA_CERTIFICATES: /var/pebble-test-certs/pebble.minica.pem
+      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_CASERVER: https://pebble:14000/dir
+    volumes:
+      - pebble-test-certs:/var/pebble-test-certs
+    ports:
       - 8080:8080
+    networks:
+      - acme-server
+
+  acme-pebble:
+    image: letsencrypt/pebble
+    # when container stop all account in memory will lost
+    # that cause error to acme client which save account crendential already,
+    # so we remove all acme data each start
+    command: 
+      - sh
+      - -c 
+      - | 
+        rm -rf /var/acme/* &&
+        pebble -config /test/my-pebble-config.json
+    volumes:
+      - acme:/var/acme
+      - pebble-test-certs:/test/certs
+      - ./pebble/my-pebble-config.json:/test/my-pebble-config.json
+    networks:
+      acme-server:
+        aliases:
+          - pebble
+    extra_hosts:
+      - ${MW_HOST}:host-gateway
+
+volumes:
+  pebble-test-certs:
+networks:
+  acme-server:
