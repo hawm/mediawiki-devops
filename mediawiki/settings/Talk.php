@@ -1,14 +1,14 @@
 <?php  
 
 # Disable all core TALK namespaces
-$wgNamespaceProtection[NS_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_USER_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_PROJECT_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_FILE_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_MEDIAWIKI_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_TEMPLATE_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_HELP_TALK] = ['everyone'];
-$wgNamespaceProtection[NS_CATEGORY_TALK] = ['everyone'];
+$wgNamespaceProtection[NS_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_USER_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_PROJECT_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_FILE_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_MEDIAWIKI_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_TEMPLATE_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_HELP_TALK] = ['nobody'];
+$wgNamespaceProtection[NS_CATEGORY_TALK] = ['nobody'];
 
 # remove page action
 $wgHooks['SkinTemplateNavigation'][] = 'removeTalkAction';
