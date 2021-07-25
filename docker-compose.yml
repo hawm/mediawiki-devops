@@ -22,10 +22,10 @@ services:
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
     labels:
       - traefik.enable=true
-      - traefik.http.routers.mediawiki.rule=Host(`${MW_HOST}`)
-      - traefik.http.routers.mediawiki.entrypoints=websecure
-      - traefik.http.routers.mediawiki.tls=true
-      - traefik.http.routers.mediawiki.tls.certresolver=myresolver
+      - traefik.http.routers.wiki.rule=Host(`${MW_HOST}`)
+      - traefik.http.routers.wiki.entrypoints=websecure
+      - traefik.http.routers.wiki.tls=true
+      - traefik.http.routers.wiki.tls.certresolver=myresolver
     networks:
       - frontend
       - backend
@@ -82,8 +82,8 @@ services:
     profiles:
       - manager
     volumes:
-      - wiki-data:/var/mediawiki/database
-      - wiki-upload:/var/mediawiki/upload
+      - wiki-data:/var/wiki/database
+      - wiki-upload:/var/wiki/upload
       - ./backups:/var/mybackups
 
 networks:

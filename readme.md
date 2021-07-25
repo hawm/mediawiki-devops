@@ -32,12 +32,12 @@ All data volumes are mount into `manager` container, and bind mount host `./back
 **Note the dot `.` at the end of command**
 
 ```sh
-docker-compose run --rm manager tar cvf /var/mybackups/mediawiki-$(date --utc +%Y%m%d%H%M%S).tar -C /var/mediawiki .
+docker-compose run --rm manager tar cvf /var/mybackups/wiki-$(date --utc +%Y%m%d%H%M%S).tar -C /var/wiki .
 ```
 
 #### restore
 ```sh
-docker-compose run --rm manager tar xvf /var/mybackups/mediawiki-${VERSION}.tar -C /var/mediawiki
+docker-compose run --rm manager tar xvf /var/mybackups/wiki-${VERSION}.tar -C /var/wiki
 ```
 
 ## Read More
