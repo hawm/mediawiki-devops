@@ -1,8 +1,9 @@
 version: "3"
 
 services:
-  wiki:
-    build: .
+  mediawiki:
+    build: 
+      context: ./mediawiki
     restart: always
     env_file:
       - .env
