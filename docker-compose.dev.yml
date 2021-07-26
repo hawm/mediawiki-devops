@@ -30,7 +30,7 @@ services:
         rm -rf /var/acme/* &&
         pebble -config /test/my-pebble-config.json
     volumes:
-      - acme:/var/acme
+      - acme-data:/var/acme
       - pebble-test-certs:/test/certs
       - ./pebble/my-pebble-config.json:/test/my-pebble-config.json
     networks:

@@ -76,7 +76,7 @@ services:
       TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_STORAGE: /etc/traefik/acme/acme.json
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - acme:/etc/traefik/acme
+      - acme-data:/etc/traefik/acme
     networks:
       - frontend
 
@@ -104,5 +104,5 @@ networks:
 volumes:
   wiki-data:
   wiki-upload:
-  acme:
+  acme-data:
   redis-data:
