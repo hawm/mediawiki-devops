@@ -33,7 +33,7 @@
   // "forwardPorts": [],
 
   // Uncomment the next line if you want start specific services in your Docker Compose config.
-  "runServices": ["database", "redis-cache", "reverse-proxy"],
+  "runServices": ["database", "cache-redis", "reverse-proxy", "acme-pebble"],
 
   // Uncomment the next line if you want to keep your containers running after VS Code shuts down.
   "shutdownAction": "none",
