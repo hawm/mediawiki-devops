@@ -51,12 +51,12 @@ services:
   cache-redis:
     image: redis:alpine
     restart: always
-    volumes: 
+    volumes:
       - redis-data:/data
       - ./redis:/var/redis
     command:
       - /var/redis/redis.conf
-    networks: 
+    networks:
       - backend
 
   reverse-proxy:
