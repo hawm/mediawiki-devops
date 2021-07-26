@@ -15,12 +15,4 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit;
 }
 
-# Load settings
-foreach(glob("$IP/settings/*.php") as $setting){
-	require $setting;
-}
-
-# Load custom extension/skin
-foreach(glob("$IP/settings/{skins,extensions}/*.php", GLOB_BRACE) as $setting){
-	require $setting;
-}
+require_once "${IP}/settings/Loader.php";

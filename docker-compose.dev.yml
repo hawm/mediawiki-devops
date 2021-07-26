@@ -1,6 +1,9 @@
 version: "3"
 
 services:
+  wiki:
+    environment: 
+      MW_DEBUG: "true"
   reverse-proxy:
     environment:
       TRAEFIK_LOG_LEVEL: DEBUG
