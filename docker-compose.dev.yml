@@ -4,19 +4,23 @@ services:
   mediawiki:
     environment: 
       MW_DEBUG: "true"
+    labels: 
+      traefik.http.routers.wiki-secure.tls.certresolver: pebble
   reverse-proxy:
     environment:
       TRAEFIK_LOG_LEVEL: DEBUG
       TRAEFIK_API_DASHBOARD: "true"
       TRAEFIK_API_INSECURE: "true"
       LEGO_CA_CERTIFICATES: /var/pebble-test-certs/pebble.minica.pem
-      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_CASERVER: https://pebble:14000/dir
+      TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_TLSCHALLENGE: "true"
+      TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_EMAIL: ${ACME_EMAIL}
+      TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_CASERVER: https://pebble:14000/dir
     volumes:
       - pebble-test-certs:/var/pebble-test-certs
     ports:
       - 8080:8080
     networks:
-      - acme-server
+      - acme
 
   acme-pebble:
     image: letsencrypt/pebble
@@ -34,7 +38,7 @@ services:
       - pebble-test-certs:/test/certs
       - ./pebble/my-pebble-config.json:/test/my-pebble-config.json
     networks:
-      acme-server:
+      acme:
         aliases:
           - pebble
     extra_hosts:
@@ -43,4 +47,4 @@ services:
 volumes:
   pebble-test-certs:
 networks:
-  acme-server:
+  acme:

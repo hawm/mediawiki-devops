@@ -2,7 +2,7 @@ version: "3"
 
 services:
   mediawiki:
-    build: 
+    build:
       context: ./mediawiki
     restart: always
     env_file:
@@ -22,14 +22,14 @@ services:
       # robots
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.wiki-secure.rule=Host(`${MW_HOST}`)
-      - traefik.http.routers.wiki-secure.entrypoints=websecure
-      - traefik.http.routers.wiki-secure.tls=true
-      - traefik.http.routers.wiki-secure.tls.certresolver=myresolver
-      - traefik.http.routers.wiki.rule=Host(`${MW_HOST}`)
-      - traefik.http.routers.wiki.entrypoints=web
-      - traefik.http.middlewares.wiki.redirectscheme.scheme=https
+      traefik.enable: "true"
+      traefik.http.routers.wiki-secure.rule: Host(`${MW_HOST}`)
+      traefik.http.routers.wiki-secure.entrypoints: websecure
+      traefik.http.routers.wiki-secure.tls: "true"
+      traefik.http.routers.wiki-secure.tls.certresolver: letsencrypt
+      traefik.http.routers.wiki.rule: Host(`${MW_HOST}`)
+      traefik.http.routers.wiki.entrypoints: web
+      traefik.http.middlewares.wiki.redirectscheme.scheme: https
     networks:
       - frontend
       - backend
@@ -72,9 +72,9 @@ services:
       TRAEFIK_PROVIDERS_DOCKER_NETWORK: wiki_frontend
       TRAEFIK_ENTRYPOINTS_web_ADDRESS: :80
       TRAEFIK_ENTRYPOINTS_websecure_ADDRESS: :443
-      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_TLSCHALLENGE: "true"
-      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_EMAIL: ${ACME_EMAIL}
-      TRAEFIK_CERTIFICATESRESOLVERS_myresolver_ACME_STORAGE: /etc/traefik/acme/acme.json
+      TRAEFIK_CERTIFICATESRESOLVERS_letsencrypt_ACME_TLSCHALLENGE: "true"
+      TRAEFIK_CERTIFICATESRESOLVERS_letsencrypt_ACME_EMAIL: ${ACME_EMAIL}
+      TRAEFIK_CERTIFICATESRESOLVERS_letsencrypt_ACME_STORAGE: /etc/traefik/acme/acme.json
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme-data:/etc/traefik/acme
@@ -94,9 +94,7 @@ networks:
   frontend:
     name: wiki_frontend
   backend:
-    name: wiki_backend
   ipv6:
-    name: wiki_ipv6
     enable_ipv6: true
     ipam:
       config:
