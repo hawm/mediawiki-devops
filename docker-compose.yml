@@ -87,15 +87,6 @@ services:
     networks:
       - frontend
 
-  manager:
-    image: ubuntu:latest
-    profiles:
-      - manager
-    volumes:
-      - wiki-data:/var/wiki/database
-      - wiki-upload:/var/wiki/upload
-      - ./backups:/var/mybackups
-
 networks:
   frontend:
     name: wiki_frontend
