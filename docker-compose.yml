@@ -5,8 +5,14 @@ services:
     build:
       context: ./mediawiki
     restart: always
-    env_file:
-      - .env
+    environment:
+      MW_INSTALL_PATH:
+      MW_NAME:
+      MW_HOST:
+      MW_SMTP_HOST:
+      MW_SMPT_PORT:
+      MW_SMTP_USERNAME:
+      MW_SMTP_PASSWORD:
     volumes:
       # uploads
       - wiki-upload:/var/www/html/images
