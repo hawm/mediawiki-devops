@@ -17,7 +17,6 @@ $wgArticlePath = "/title/$1";
 $wgServer = '//'.getenv('MW_HOST');
 ## when using a self-signed certificate on development environment,
 ## https url cause VistualEditor curl error: 60.
-## manual comment it to avoid error when developing
 $wgCanonicalServer = 'https:'. $wgServer;
 
 ## The URL path to static resources (images, scripts, etc.)
