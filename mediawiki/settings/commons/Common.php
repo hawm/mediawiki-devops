@@ -15,8 +15,10 @@ $wgArticlePath = "/title/$1";
 
 ## The protocol and server name to use in fully-qualified URLs
 $wgServer = '//'.getenv('MW_HOST');
-## this config may cause VE curl error
-//$wgCanonicalServer = 'https:'. $wgServer;
+## when using a self-signed certificate on development environment,
+## https url cause VistualEditor curl error: 60.
+## manual comment it to avoid error when developing
+$wgCanonicalServer = 'https:'. $wgServer;
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
