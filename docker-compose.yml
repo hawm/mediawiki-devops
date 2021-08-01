@@ -7,12 +7,16 @@ services:
     restart: always
     environment:
       MW_INSTALL_PATH:
-      MW_NAME:
-      MW_HOST:
-      MW_SMTP_HOST:
-      MW_SMPT_PORT:
-      MW_SMTP_USERNAME:
-      MW_SMTP_PASSWORD:
+      WIKI_NAME:
+      WIKI_HOST:
+      WIKI_SMTP_HOST:
+      WIKI_SMPT_PORT:
+      WIKI_SMTP_USERNAME:
+      WIKI_SMTP_PASSWORD:
+      WIKI_DATABASE_HOST:
+      WIKI_DATABASE_NAME:
+      WIKI_DATABASE_USER:
+      WIKI_DATABASE_PASSWORD:
     volumes:
       # uploads
       - wiki-upload:/var/www/html/images
@@ -29,11 +33,11 @@ services:
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
     labels:
       traefik.enable: "true"
-      traefik.http.routers.wiki-secure.rule: Host(`${MW_HOST}`)
+      traefik.http.routers.wiki-secure.rule: Host(`${WIKI_HOST}`)
       traefik.http.routers.wiki-secure.entrypoints: websecure
       traefik.http.routers.wiki-secure.tls: "true"
       traefik.http.routers.wiki-secure.tls.certresolver: letsencrypt
-      traefik.http.routers.wiki.rule: Host(`${MW_HOST}`)
+      traefik.http.routers.wiki.rule: Host(`${WIKI_HOST}`)
       traefik.http.routers.wiki.entrypoints: web
       traefik.http.middlewares.wiki.redirectscheme.scheme: https
     networks:
@@ -46,10 +50,10 @@ services:
     restart: always
     environment:
       # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
-      MYSQL_DATABASE: mediawiki
-      MYSQL_USER: mediawiki
-      MYSQL_PASSWORD: mediawiki
-      MYSQL_ROOT_PASSWORD: mediawiki
+      MYSQL_DATABASE: $WIKI_DATABASE_NAME
+      MYSQL_USER: $WIKI_DATABASE_USER
+      MYSQL_PASSWORD: $WIKI_DATABASE_PASSWORD
+      MYSQL_ROOT_PASSWORD: $WIKI_DATABASE_ROOT_PASSWORD
     volumes:
       - wiki-data:/var/lib/mysql
     networks:

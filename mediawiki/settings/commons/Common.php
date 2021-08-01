@@ -3,7 +3,7 @@
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
-$wgSitename = getenv('MW_NAME');
+$wgSitename = getenv('WIKI_NAME');
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
@@ -14,7 +14,7 @@ $wgScriptPath = "";
 $wgArticlePath = "/title/$1";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = '//'.getenv('MW_HOST');
+$wgServer = '//'.getenv('WIKI_HOST');
 ## when using a self-signed certificate on development environment,
 ## https url cause VistualEditor curl error: 60.
 $wgCanonicalServer = 'https:'. $wgServer;

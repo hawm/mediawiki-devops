@@ -3,7 +3,7 @@ version: "3"
 services:
   mediawiki:
     environment: 
-      MW_DEBUG: "true"
+      WIKI_DEBUG: "true"
     labels: 
       traefik.http.routers.wiki-secure.tls.certresolver: pebble
   reverse-proxy:
@@ -42,7 +42,7 @@ services:
         aliases:
           - pebble
     extra_hosts:
-      - ${MW_HOST}:host-gateway
+      - ${WIKI_HOST}:host-gateway
 
 volumes:
   pebble-test-certs:
