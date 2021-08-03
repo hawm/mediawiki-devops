@@ -1,0 +1,5 @@
+FROM lobaro/restic-backup-docker:latest
+
+# we don't need rclone and its size
+RUN apk add --no-cache alpine-conf mariadb-backup
+RUN setup-timezone -z Asia/Shanghai
