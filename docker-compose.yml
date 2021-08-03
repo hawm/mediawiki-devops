@@ -52,10 +52,10 @@ services:
     restart: always
     environment:
       # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
-      MYSQL_DATABASE: $WIKI_DATABASE_NAME
-      MYSQL_USER: $WIKI_DATABASE_USER
-      MYSQL_PASSWORD: $WIKI_DATABASE_PASSWORD
-      MYSQL_ROOT_PASSWORD: $WIKI_DATABASE_ROOT_PASSWORD
+      MYSQL_DATABASE: ${WIKI_DATABASE_NAME}
+      MYSQL_USER: ${WIKI_DATABASE_USER}
+      MYSQL_PASSWORD: ${WIKI_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
     volumes:
       - wiki-data:/var/lib/mysql
     networks:
