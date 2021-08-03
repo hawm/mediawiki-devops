@@ -2,7 +2,7 @@ version: "3"
 
 services:
   restic:
-    build: 
+    build:
       context: ./restic
     hostname: restic
     environment:
@@ -18,9 +18,16 @@ services:
       BACKUP_DATABASE_HOST: database
       BACKUP_DATABASE_USER: root
       BACKUP_DATABASE_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
+      BACKUP_DATABASE_NAME: ${WIKI_DATABASE_NAME}
     volumes:
       - wiki-upload:/data/upload
-      - wiki-data:/var/lib/mysql
+      - wiki-data-dump:/data/database
       - ./restic/hooks:/hooks
-    networks: 
+    networks:
       - backend
+
+volumes:
+  wiki-data-dump:
+  wiki-upload:
+networks: 
+  backend:

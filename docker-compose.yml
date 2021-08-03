@@ -58,6 +58,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
     volumes:
       - wiki-data:/var/lib/mysql
+      - wiki-data-dump:/docker-entrypoint-initdb.d
     networks:
       - backend
 
@@ -105,6 +106,7 @@ networks:
 
 volumes:
   wiki-data:
+  wiki-data-dump:
   wiki-upload:
   acme-data:
   redis-data:
