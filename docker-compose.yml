@@ -67,9 +67,9 @@ services:
     restart: always
     volumes:
       - redis-data:/data
-      - ./redis:/var/redis
+      - ./redis/conf:/usr/local/etc/redis
     command:
-      - /var/redis/redis.conf
+      - /usr/local/etc/redis/redis.conf
     networks:
       - backend
 
