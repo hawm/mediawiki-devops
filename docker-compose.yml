@@ -72,7 +72,7 @@ services:
       - /usr/local/etc/redis/redis.conf
     networks:
       - backend
-
+  
   overcommit:
     profiles:
       - overcommit
@@ -103,6 +103,33 @@ services:
       - acme-data:/etc/traefik/acme
     networks:
       - frontend
+
+  restic:
+    profiles:
+      - backup
+    build:
+      context: ./restic
+    hostname: restic
+    environment:
+      RESTIC_REPOSITORY:
+      RESTIC_PASSWORD:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+      AWS_DEFAULT_REGION:
+      RESTIC_TAG: ${RESTIC_TAG}
+      RESTIC_FORGET_ARGS: ${RESTIC_FORGET_ARGS}
+      RESTIC_JOB_ARGS: ${RESTIC_JOB_ARGS}
+      BACKUP_CRON: ${BACKUP_CRON}
+      BACKUP_DATABASE_HOST: database
+      BACKUP_DATABASE_USER: root
+      BACKUP_DATABASE_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
+      BACKUP_DATABASE_NAME: ${WIKI_DATABASE_NAME}
+    volumes:
+      - wiki-upload:/data/upload
+      - wiki-data-dump:/data/database
+      - ./restic/hooks:/hooks
+    networks:
+      - backend
 
 networks:
   frontend:
