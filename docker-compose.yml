@@ -73,6 +73,16 @@ services:
     networks:
       - backend
 
+  overcommit:
+    profiles:
+      - overcommit
+    build: 
+      context: ./overcommit
+    restart: 'no'
+    privileged: true
+    volumes: 
+      - /proc/sys/vm:/mnt/vm
+
   reverse-proxy:
     image: traefik:latest
     restart: always
