@@ -44,10 +44,13 @@ services:
       - frontend
       - backend
     #  - ipv6
-    extra_hosts: 
+    extra_hosts:
       - ${WIKI_HOST}:host-gateway
+    depends_on:
+      - db-mariadb
+      - db-redis
 
-  database:
+  db-mariadb:
     image: mariadb
     restart: always
     environment:
@@ -62,7 +65,7 @@ services:
     networks:
       - backend
 
-  cache-redis:
+  db-redis:
     image: redis:alpine
     restart: always
     volumes:
@@ -72,18 +75,18 @@ services:
       - /usr/local/etc/redis/redis.conf
     networks:
       - backend
-  
+
   overcommit:
     profiles:
       - overcommit
-    build: 
+    build:
       context: ./overcommit
-    restart: 'no'
+    restart: "no"
     privileged: true
-    volumes: 
+    volumes:
       - /proc/sys/vm:/mnt/vm
 
-  reverse-proxy:
+  traefik:
     image: traefik:latest
     restart: always
     ports:
@@ -104,7 +107,7 @@ services:
     networks:
       - frontend
 
-  restic:
+  tool-restic:
     profiles:
       - backup
     build:
@@ -120,7 +123,7 @@ services:
       RESTIC_FORGET_ARGS: ${RESTIC_FORGET_ARGS}
       RESTIC_JOB_ARGS: ${RESTIC_JOB_ARGS}
       BACKUP_CRON: ${BACKUP_CRON}
-      BACKUP_DATABASE_HOST: database
+      BACKUP_DATABASE_HOST: db-mariadb
       BACKUP_DATABASE_USER: root
       BACKUP_DATABASE_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
       BACKUP_DATABASE_NAME: ${WIKI_DATABASE_NAME}

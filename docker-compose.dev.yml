@@ -6,7 +6,7 @@ services:
       WIKI_DEBUG: "true"
     labels: 
       traefik.http.routers.wiki-secure.tls.certresolver: pebble
-  reverse-proxy:
+  traefik:
     environment:
       TRAEFIK_LOG_LEVEL: DEBUG
       TRAEFIK_API_DASHBOARD: "true"
@@ -21,6 +21,8 @@ services:
       - 8080:8080
     networks:
       - acme
+    depends_on: 
+      - acme-pebble
 
   acme-pebble:
     image: letsencrypt/pebble
