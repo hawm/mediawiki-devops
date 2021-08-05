@@ -5,7 +5,7 @@ $wgEnableEmail = true;
 $wgEmailConfirmToEdit = true;
 $wgEmailAuthentication = true;
 $wgPasswordSender = getenv('WIKI_PASSWORD_SENDER_EMAIL');
-$wgEmergencyContact = getenv('WIKI_EMERGENCY_CONTACT_EMAIL')
+$wgEmergencyContact = getenv('WIKI_EMERGENCY_CONTACT_EMAIL');
 
 $wgEnotifUserTalk = false; # UPO
 $wgEnotifWatchlist = false; # UPO
