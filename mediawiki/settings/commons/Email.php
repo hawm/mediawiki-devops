@@ -14,7 +14,7 @@ $wgEnableUserEmail = false; # UPO
 $wgSMTP = [
     'host' => getenv('WIKI_SMTP_HOST'),
     'port' => getenv('WIKI_SMTP_PORT'),
-    'auth' => true,
+    'auth' => getenv('WIKI_SMTP_AUTH'),
     'username' => getenv('WIKI_SMTP_USERNAME'),
     'password' => getenv('WIKI_SMTP_PASSWORD')
 ];
