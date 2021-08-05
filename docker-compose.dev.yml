@@ -2,10 +2,13 @@ version: "3"
 
 services:
   mediawiki:
-    environment: 
+    environment:
       WIKI_DEBUG: "true"
-    labels: 
+    labels:
       traefik.http.routers.wiki-secure.tls.certresolver: pebble
+    networks:
+      - smtp
+
   traefik:
     environment:
       TRAEFIK_LOG_LEVEL: DEBUG
@@ -21,7 +24,7 @@ services:
       - 8080:8080
     networks:
       - acme
-    depends_on: 
+    depends_on:
       - acme-pebble
 
   acme-pebble:
@@ -29,10 +32,10 @@ services:
     # when container stop all account in memory will lost
     # that cause error to acme client which save account crendential already,
     # so we remove all acme data each start
-    command: 
+    command:
       - sh
-      - -c 
-      - | 
+      - -c
+      - |
         rm -rf /var/acme/* &&
         pebble -config /test/my-pebble-config.json
     volumes:
@@ -46,7 +49,21 @@ services:
     extra_hosts:
       - ${WIKI_HOST}:host-gateway
 
+  mail-mailcatcher:
+    image: sj26/mailcatcher:latest
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.mailcatcher.rule: Host(`mailcatcher.localhost`)
+      traefik.http.routers.entrypoints: web
+      traefik.http.services.mailcatcher.loadbalancer.server.port: 1080
+    networks:
+      smtp:
+        aliases:
+          - mailcatcher
+      frontend:
+
 volumes:
   pebble-test-certs:
 networks:
   acme:
+  smtp:
