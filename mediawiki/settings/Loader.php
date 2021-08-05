@@ -10,7 +10,7 @@ foreach(glob(__DIR__ . "/{skins,extensions}/*.php", GLOB_BRACE) as $setting){
 }
 
 # Load debug
-if (getenv('WIKI_DEBUG') == true){
+if (strtolower(getenv('WIKI_DEBUG')) === 'true'){
 	foreach(glob(__DIR__ . "/debugs/*.php") as $setting){
 		require $setting;
 	}
