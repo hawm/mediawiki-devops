@@ -23,10 +23,6 @@ services:
     volumes:
       # uploads
       - wiki-upload:/var/www/html/images
-      # extensions
-      # - ./mediawiki/extensions/extension-name:${MW_INSTALL_PATH}/extensions/extension-name
-      # skins
-      #- ./mediaiwki/skins/skin-name:${MW_INSTALL_PATH}/skins/skin-name
       # settings
       - ./mediawiki/settings:${MW_INSTALL_PATH}/settings
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
