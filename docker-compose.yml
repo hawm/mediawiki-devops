@@ -29,6 +29,8 @@ services:
       - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess
       # robots
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
+      # favicon
+      - ./mediawiki/favicon.ico:${MW_INSTALL_PATH}/favicon.ico
     labels:
       traefik.enable: "true"
       traefik.http.routers.wiki-secure.rule: Host(`${WIKI_HOST}`)
