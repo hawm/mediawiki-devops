@@ -25,7 +25,6 @@ services:
       - wiki-upload:/var/www/html/images
       # settings
       - ./mediawiki/settings:${MW_INSTALL_PATH}/settings
-      - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
       # apache
       - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess
       # robots

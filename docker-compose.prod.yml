@@ -1,0 +1,6 @@
+version: "3"
+
+services:
+  mediawiki:
+    volumes:
+      - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
