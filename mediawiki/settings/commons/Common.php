@@ -22,8 +22,6 @@ $wgCanonicalServer = 'https:'. $wgServer;
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
-# Site language code, should be one of the list in ./languages/data/Names.php
-$wgLanguageCode = "zh-cn";
 
 $wgLocaltimezone = "Asia/Shanghai";
 date_default_timezone_set( $wgLocaltimezone );
