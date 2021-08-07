@@ -25,5 +25,3 @@ $wgResourceBasePath = $wgScriptPath;
 
 $wgLocaltimezone = "Asia/Shanghai";
 date_default_timezone_set( $wgLocaltimezone );
-
-wfLoadExtension( 'MultimediaViewer' );
