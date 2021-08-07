@@ -21,6 +21,8 @@ services:
       WIKI_DATABASE_USER:
       WIKI_DATABASE_PASSWORD:
     volumes:
+      # install
+      - ./mediawiki/install.sh:/install.sh
       # uploads
       - wiki-upload:/var/www/html/images
       # settings
