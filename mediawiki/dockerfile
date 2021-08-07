@@ -1,7 +1,26 @@
 FROM mediawiki:1.36
 
+# Install addition dependencies
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zlib1g-dev \
+    unzip
 RUN pecl install redis && docker-php-ext-enable redis
+RUN docker-php-ext-install zip && docker-php-ext-enable zip
 
+# Install Composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_HOME /tmp
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# Config Composer mirror
+ARG COMPOSER_MIRROR="https://mirrors.aliyun.com/composer/"
+RUN composer config -g repo.packagist composer $COMPOSER_MIRROR
+
+# Install MediaWiki extension
+COPY ./composer.local.json /var/www/html/composer.local.json
+RUN composer update --no-dev
+
+# User for development
 ARG USERNAME=mediawiki
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -14,8 +33,3 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
-
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /tmp
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
