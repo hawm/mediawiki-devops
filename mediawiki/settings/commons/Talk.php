@@ -15,12 +15,14 @@ $talkNS = [
 foreach ($talkNS as $ns) {
 	$wgNamespaceProtection[$ns] = ['nobody'];
 }
+
+
 # Remove tab/link
 $wgHooks['SkinTemplateNavigation::Universal'][] = function ($template, &$links) {
 	unset($links['user-menu']['mytalk']);
-	array_walk($links['namespaces'], function ($v, $k) use (&$links) {
+	foreach ($links['namespaces'] as $k => $v) {
 		if (preg_match('/[Tt]alk$/', $k)) {
 			unset($links['namespaces'][$k]);
 		}
-	});
+	}
 };
