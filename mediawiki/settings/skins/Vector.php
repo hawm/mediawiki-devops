@@ -1,6 +1,6 @@
 <?php
 
-wfLoadSkin( 'Vector' );
+wfLoadSkin('Vector');
 $wgVectorDefaultSkinVersion = '2';
 $wgVectorResponsive = true;
 $wgVectorShowSkinPreferences = false;

@@ -1,3 +1,3 @@
 <?php
 
-wfLoadExtension( 'MultimediaViewer' );
+wfLoadExtension('MultimediaViewer');

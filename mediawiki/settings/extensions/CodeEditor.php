@@ -1,3 +1,3 @@
 <?php
 
-wfLoadExtension( 'CodeEditor' );
+wfLoadExtension('CodeEditor');

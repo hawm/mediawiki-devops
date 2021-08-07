@@ -10,18 +10,21 @@ $wgSitename = getenv('WIKI_NAME');
 ## For more information on customizing the URLs
 ## (like /w/index.php/Page_title to /wiki/Page_title) please see:
 ## https://www.mediawiki.org/wiki/Manual:Short_URL
-$wgScriptPath = "";
+$wgScriptPath = '';
 $wgArticlePath = "/title/$1";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = '//'.getenv('WIKI_HOST');
+$wgServer = '//' . getenv('WIKI_HOST');
 ## when using a self-signed certificate on development environment,
 ## https url cause VistualEditor curl error: 60.
-$wgCanonicalServer = 'https:'. $wgServer;
+$wgCanonicalServer = 'https:' . $wgServer;
 
 ## The URL path to static resources (images, scripts, etc.)
 $wgResourceBasePath = $wgScriptPath;
 
+## Skin
+$wgDefaultSkin = 'vector';
 
-$wgLocaltimezone = "Asia/Shanghai";
-date_default_timezone_set( $wgLocaltimezone );
+## Timezone
+$wgLocaltimezone = 'Asia/Shanghai';
+date_default_timezone_set($wgLocaltimezone);

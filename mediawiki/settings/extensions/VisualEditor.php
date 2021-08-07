@@ -1,3 +1,3 @@
 <?php
 
-wfLoadExtension( 'VisualEditor' );
+wfLoadExtension('VisualEditor');
