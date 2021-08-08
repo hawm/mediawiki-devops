@@ -1,5 +1,7 @@
 FROM mediawiki:1.36
 
+ENV MW_INSTALL_PATH=/var/www/html
+
 # Install addition dependencies
 RUN apt-get update && apt-get install -y \
     libzip-dev \
@@ -16,8 +18,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 ARG COMPOSER_MIRROR="https://mirrors.aliyun.com/composer/"
 RUN composer config -g repo.packagist composer $COMPOSER_MIRROR
 
-# Install MediaWiki extension
-COPY ./composer.local.json /var/www/html/composer.local.json
+# Install MediaWiki extension with Composer
+COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 RUN composer update --no-dev
 
 # User for development
