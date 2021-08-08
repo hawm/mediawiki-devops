@@ -2,13 +2,28 @@ FROM mediawiki:1.36
 
 ENV MW_INSTALL_PATH=/var/www/html
 
-# Install addition dependencies
+# Install system requirement
 RUN apt-get update && apt-get install -y \
+    sudo \
     libzip-dev \
     zlib1g-dev \
     unzip
-RUN pecl install redis && docker-php-ext-enable redis
-RUN docker-php-ext-install zip && docker-php-ext-enable zip
+
+# Create user for development
+ARG USERNAME=mediawiki
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    # Add sudo support
+    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+    && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Install PHP requirement
+RUN pecl install redis \
+    && docker-php-ext-install zip \
+    && docker-php-ext-enable redis zip
 
 # Install Composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
@@ -23,19 +38,8 @@ COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 RUN composer update --no-dev
 
 # Install MediaWiki extension without Composer
+ARG GITHUB_MIRROR="https://github.com.cnpmjs.org"
 COPY ./install_extensions.sh /tmp/install_extensions.sh
 RUN /tmp/install_extensions.sh
 
-# User for development
-ARG USERNAME=mediawiki
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
 
-# Create the user
-RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    # Add sudo support
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME
