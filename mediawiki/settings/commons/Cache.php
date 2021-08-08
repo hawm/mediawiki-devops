@@ -5,8 +5,4 @@ $wgObjectCaches['redis'] = [
     'persistent' => true,
 ];
 $wgMainCacheType = 'redis';
-$wgSessionCacheType = 'redis';
-$wgMessageCacheType = 'redis';
-$wgParserCacheType = 'redis';
-$wgLanguageConverterCacheType = 'redis';
 $wgCacheDirectory = "$IP/cache";
