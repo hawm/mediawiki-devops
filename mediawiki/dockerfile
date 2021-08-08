@@ -22,6 +22,10 @@ RUN composer config -g repo.packagist composer $COMPOSER_MIRROR
 COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 RUN composer update --no-dev
 
+# Install MediaWiki extension without Composer
+COPY ./install_extensions.sh /tmp/install_extensions.sh
+RUN /tmp/install_extensions.sh
+
 # User for development
 ARG USERNAME=mediawiki
 ARG USER_UID=1000
