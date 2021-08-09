@@ -28,3 +28,6 @@ $wgDefaultSkin = 'vector';
 ## Timezone
 $wgLocaltimezone = 'Asia/Shanghai';
 date_default_timezone_set($wgLocaltimezone);
+
+# Open external link in new tab
+$wgExternalLinkTarget = '_blank';
