@@ -7,3 +7,5 @@ $wgJobTypeConf['default'] = [
     'claimTTL'       => 3600,
     'daemonized'     => true
  ];
+
+ $wgRunJobsAsync = true;
