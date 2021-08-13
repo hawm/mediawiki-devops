@@ -29,15 +29,12 @@ RUN pecl install redis \
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp/composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-# Config mirror
-ARG COMPOSER_MIRROR="https://mirrors.aliyun.com/composer/"
-ARG GITHUB_MIRROR="https://github.com.cnpmjs.org"
-RUN composer config -g repo.packagist composer $COMPOSER_MIRROR
 # Copy Comopser config
 COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
-# Copy install script
-COPY ./install_extensions.sh /tmp/install_extensions.sh
-# Install extension
-RUN /tmp/install_extensions.sh
+# Install extension by Composer
+# The later update command to install requires for just installed extensions
+RUN composer update --no-dev \
+    && composer update --no-dev
+
 
 
