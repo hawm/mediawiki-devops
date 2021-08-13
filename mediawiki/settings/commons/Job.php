@@ -8,4 +8,5 @@ $wgJobTypeConf['default'] = [
     'daemonized'     => true
  ];
 
- $wgRunJobsAsync = true;
+$wgRunJobsAsync = true;
+$wgJobRunRate = 10;
