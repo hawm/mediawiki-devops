@@ -27,8 +27,10 @@ RUN pecl install redis \
 
 # Install Composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /tmp/composer
+ENV COMPOSER_HOME /var/composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# Config mirror
+RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 # Copy Comopser config
 COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 # Install extension by Composer
