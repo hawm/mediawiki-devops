@@ -69,8 +69,7 @@
     "mediawiki/code-mirror": "1.0",
     "mediawiki/template-sandbox": "1.0",
     "mediawiki/head-script": "1.0",
-    "mediawiki/CSS": "1.0",
-    "mediawiki/portable-infobox": "1.0"
+    "mediawiki/CSS": "1.0"
   },
   "extra": {
     "merge-plugin": {
