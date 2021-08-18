@@ -1,10 +1,6 @@
 {
   "repositories": [
     {
-      "type": "composer",
-      "url": "https://mirrors.aliyun.com/composer/"
-    },
-    {
       "type": "package",
       "package": {
         "name": "mediawiki/lockdown",
@@ -39,6 +35,30 @@
           "type": "zip"
         }
       }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "mediawiki/head-script",
+        "type": "mediawiki-extension",
+        "version": "1.0",
+        "dist": {
+          "url": "https://github.com.cnpmjs.org/wikimedia/mediawiki-extensions-HeadScript/archive/refs/heads/REL1_36.zip",
+          "type": "zip"
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "mediawiki/CSS",
+        "type": "mediawiki-extension",
+        "version": "1.0",
+        "dist": {
+          "url": "https://github.com/wikimedia/mediawiki-extensions-CSS/archive/refs/heads/REL1_36.zip",
+          "type": "zip"
+        }
+      }
     }
   ],
   "require": {
@@ -46,7 +66,11 @@
     "mediawiki/semantic-meta-tags": "~3.0",
     "mediawiki/lockdown": "1.0",
     "mediawiki/template-styles": "1.0",
-    "mediawiki/code-mirror": "1.0"
+    "mediawiki/code-mirror": "1.0",
+    "mediawiki/template-sandbox": "1.0",
+    "mediawiki/head-script": "1.0",
+    "mediawiki/CSS": "1.0",
+    "mediawiki/portable-infobox": "1.0"
   },
   "extra": {
     "merge-plugin": {
