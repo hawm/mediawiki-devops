@@ -7,6 +7,7 @@ services:
       - ./mediawiki/dev.htaccess:${MW_INSTALL_PATH}/.htaccess
     environment:
       WIKI_DEBUG: "true"
+      WIKI_DEBUG_DISABLE_CACHE: "true"
     labels:
       traefik.http.routers.wiki-secure.tls.certresolver: pebble
     networks:
