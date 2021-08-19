@@ -72,6 +72,14 @@
         }
       }
     },
+    {
+      "type": "package",
+      "package": {
+        "name": "mediawiki/capiunto",
+        "type": "mediawiki-extension",
+        "version": "1.0",
+        "dist": {
+          "url": "https://github.com.cnpmjs.org/wikimedia/mediawiki-extensions-Capiunto/archive/refs/heads/REL1_36.zip",
           "type": "zip"
         }
       }
@@ -80,6 +88,7 @@
   "require": {
     "mediawiki/semantic-media-wiki": "~3.2",
     "mediawiki/semantic-meta-tags": "~3.0",
+    "mediawiki/semantic-scribunto": "~2.1",
     "mediawiki/lockdown": "1.0",
     "mediawiki/template-styles": "1.0",
     "mediawiki/code-mirror": "1.0",
