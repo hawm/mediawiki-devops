@@ -36,12 +36,7 @@ services:
     # when container stop all account in memory will lost
     # that cause error to acme client which save account crendential already,
     # so we remove all acme data each start
-    command:
-      - sh
-      - -c
-      - |
-        rm -rf /var/acme/* &&
-        pebble -config /test/my-pebble-config.json
+    command: sh -c "rm -rf /var/acme/* && pebble -config /test/my-pebble-config.json"
     volumes:
       - acme-data:/var/acme
       - pebble-test-certs:/test/certs
