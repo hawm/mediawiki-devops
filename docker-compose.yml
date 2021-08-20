@@ -20,9 +20,13 @@ services:
       WIKI_DATABASE_NAME:
       WIKI_DATABASE_USER:
       WIKI_DATABASE_PASSWORD:
+    # maintain scritp must run with database,
+    # so we don't put it under the dockerfile
+    entrypoint: ["/entry.sh"]
+    command: apache2-foreground
     volumes:
-      # install
-      - ./mediawiki/install.sh:/install.sh
+      - ./mediawiki/docker-entrypoint.sh:/entry.sh
+      - ./mediawiki/maintenance:/maintenance
       # uploads
       - wiki-upload:/var/www/html/images
       # settings
