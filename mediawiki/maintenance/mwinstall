@@ -9,8 +9,8 @@ php ${MW_INSTALL_PATH}/maintenance/install.php \
     --scriptpath=/ \
     --dbserver=${WIKI_DATABASE_HOST} \
     --dbname=${WIKI_DATABASE_NAME} \
-    --installdbuser=${WIKI_DATABASE_USER} \
-    --installdbpass=${WIKI_DATABASE_PASSWORD} \
+    --dbuser=${WIKI_DATABASE_USER} \
+    --dbpass=${WIKI_DATABASE_PASSWORD} \
     --pass=$password \
     TestWiki \
     $username
