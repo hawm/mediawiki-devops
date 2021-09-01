@@ -36,9 +36,9 @@ RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/compos
 # Copy Comopser config
 COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 # Install extension by Composer
-# The later update command to install requires for just installed extensions
+# The later update command to install requirements for just installed extensions
 RUN composer update --no-dev \
     && composer update --no-dev
 
-
-
+# Append maintenance script path
+ENV PATH="/usr/local/mwmaintenance:$PATH"
