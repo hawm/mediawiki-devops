@@ -1,0 +1,26 @@
+#!/bin/sh
+
+
+dump(){
+    echo "Dumping database to '$1'..."
+    mysqldump \
+        --host="${BACKUP_DATABASE_HOST}" \
+        --user="${BACKUP_DATABASE_USER}" \
+        --password="${BACKUP_DATABASE_PASSWORD}" \
+        --single-transaction \
+        "${BACKUP_DATABASE_NAME}" > "$1"
+}
+
+handle_dump_statu(){
+    if [ "$1" = 0 ]; then
+        echo "Dump successful!"
+    else
+        echo "Dump failed with statu $1"
+        exit "$1"
+    fi
+
+}
+
+echo
+dump "${DATA_DIR}/database/${BACKUP_DATABASE_NAME}.sql"
+handle_dump_statu $?

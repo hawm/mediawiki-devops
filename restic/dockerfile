@@ -1,4 +1,28 @@
-FROM lobaro/restic-backup-docker:latest
+FROM restic/restic:latest
 
-RUN apk add --no-cache alpine-conf mariadb-client
-RUN setup-timezone -z Asia/Shanghai
+RUN apk add --update --no-cache mariadb-client
+
+# Restic
+ENV RESTIC_REPOSITORY="/mnt/restic"
+ENV RESTIC_PASSWORD=""
+ENV AWS_ACCESS_KEY_ID=""
+ENV AWS_SECRET_ACCESS_KEY=""
+ENV AWS_DEFAULT_REGION=""
+# script
+ENV RESTIC_OPTIONS=""
+ENV RESTIC_BACKUP_OPTIONS="--tag daily-bakcup"
+ENV RESTIC_FORGET_OPTIONS="--keep-last 30 --prune"
+ENV BACKUP_CRON="0 2 * * *"
+ENV BACKUP_DATABASE_HOST=""
+ENV BACKUP_DATABASE_NAME=""
+ENV BACKUP_DATABASE_USER=""
+ENV BACKUP_DATABASE_PASSWORD=""
+ENV DATA_DIR="/data"
+ENV JOB_DIR="/jobs"
+ENV JOB_NAME="daily-backup"
+
+VOLUME [ "/data", "/jobs"]
+COPY ./jobs ${JOB_DIR}
+COPY ./entry.sh /entry.sh
+ENTRYPOINT [ "/entry.sh" ]
+CMD ["crond", "-l", "2", "-f"]
