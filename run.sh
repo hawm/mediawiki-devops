@@ -15,7 +15,7 @@ set -e
 
 check_file_exist(){
     if [[ ! -f $1 ]]; then
-        echo file not found: $1
+        echo "file not found: $1"
         exit 1
     fi
 }
@@ -23,11 +23,11 @@ check_file_exist(){
 env_compose_file="docker-compose.${1}.yml"
 env_file=".env.${1}"
 
-check_file_exist $env_compose_file
-check_file_exist $env_file
+check_file_exist "$env_compose_file"
+check_file_exist "$env_file"
 
 docker-compose \
     -f docker-compose.yml \
-    -f $env_compose_file \
-    --env-file $env_file \
-    ${@:2}
+    -f "$env_compose_file" \
+    --env-file "$env_file" \
+    "${@:2}"
