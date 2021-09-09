@@ -1,0 +1,19 @@
+#!/bin/sh
+
+forget(){
+    echo "Forgetting..."
+    restic forget ${RESTIC_FORGET_OPTIONS}
+}
+
+handle_forget_statu(){
+    if [ "$1" = 0 ]; then
+        echo "Forget successful!"
+    else
+        echo "Forget failed with statu $1"
+        exit "$1"
+    fi
+}
+
+echo
+forget
+handle_forget_statu $?
