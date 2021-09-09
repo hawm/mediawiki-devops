@@ -22,6 +22,7 @@ services:
       TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_CASERVER: https://pebble:14000/dir
       TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_EMAIL: ${ACME_EMAIL}
       TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_STORAGE: /etc/traefik/acme/acme.json
+      TRAEFIK_CERTIFICATESRESOLVERS_pebble_ACME_TLSCHALLENGE: "true"
     volumes:
       - pebble-test-certs:/var/pebble-test-certs
     ports:
