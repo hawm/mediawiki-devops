@@ -4,6 +4,7 @@ services:
   mediawiki:
     build:
       context: ./mediawiki
+      target: prod
     restart: always
     environment:
       MW_INSTALL_PATH:

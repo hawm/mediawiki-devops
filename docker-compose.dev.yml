@@ -2,6 +2,9 @@ version: "3"
 
 services:
   mediawiki:
+    build:
+      context: ./mediawiki
+      target: dev
     volumes:
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
       - ./mediawiki/dev.htaccess:${MW_INSTALL_PATH}/.htaccess

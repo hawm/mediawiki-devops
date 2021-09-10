@@ -1,6 +1,10 @@
 {
   "repositories": [
     {
+      "type": "composer",
+      "url": "https://mirrors.aliyun.com/composer/"
+    },
+    {
       "type": "package",
       "package": {
         "name": "mediawiki/lockdown",
@@ -99,7 +103,9 @@
   },
   "extra": {
     "merge-plugin": {
-      "include": ["extensions/TemplateStyles/composer.json"]
+      "include": [
+        "extensions/TemplateStyles/composer.json"
+      ]
     }
   }
 }

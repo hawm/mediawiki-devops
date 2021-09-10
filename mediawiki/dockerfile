@@ -1,15 +1,34 @@
-FROM mediawiki:1.36
-
+FROM mediawiki:1.36 AS prod
 ENV MW_INSTALL_PATH=/var/www/html
-
-# Install system requirement
+# add maintenance script path
+ENV PATH="/usr/local/mwmaintenance:$PATH"
+# Install system requirements
 RUN apt-get update && apt-get install -y \
-    sudo \
     libzip-dev \
     zlib1g-dev \
     unzip \
     liblua5.1-0-dev
+# Install PHP requirements
+RUN pecl install redis \
+    && pecl install luasandbox \
+    && docker-php-ext-install zip \
+    && docker-php-ext-enable redis zip luasandbox
+# Install Composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/var/composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+# Config mirror
+#RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+# Copy Comopser config
+COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
+# Install extension by Composer
+# The later update command install requirements 
+# for extensions just installed by the early  update command
+RUN composer update --no-dev \
+    && composer update --no-dev
 
+FROM prod as dev
+RUN apt-get update && apt-get install -y sudo 
 # Create user for development
 ARG USERNAME=mediawiki
 ARG USER_UID=1000
@@ -20,25 +39,3 @@ RUN groupadd --gid $USER_GID $USERNAME \
     # Add sudo support
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
-
-# Install PHP requirement
-RUN pecl install redis \
-    && pecl install luasandbox \
-    && docker-php-ext-install zip \
-    && docker-php-ext-enable redis zip luasandbox
-
-# Install Composer
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /var/composer
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-# Config mirror
-RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
-# Copy Comopser config
-COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
-# Install extension by Composer
-# The later update command to install requirements for just installed extensions
-RUN composer update --no-dev \
-    && composer update --no-dev
-
-# Append maintenance script path
-ENV PATH="/usr/local/mwmaintenance:$PATH"
