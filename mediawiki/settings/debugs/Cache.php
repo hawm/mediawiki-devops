@@ -1,6 +1,6 @@
 <?php
 
-if (strtolower(getenv('WIKI_DEBUG_DISABLE_CACHE')) === 'true'){
+if (strtolower(getenv('WIKI_DISABLE_CACHE')) === 'true'){
     $wgCachePages = false;
     $wgMainCacheType = CACHE_NONE;
     $wgSessionCacheType = 'redis';
