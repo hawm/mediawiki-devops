@@ -87,7 +87,7 @@ services:
     build:
       context: ./overcommit
     restart: "no"
-    privileged: true
+    privileged: "true"
     volumes:
       - /proc/sys/vm:/mnt/vm
 
