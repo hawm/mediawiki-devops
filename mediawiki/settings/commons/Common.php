@@ -26,7 +26,7 @@ $wgResourceBasePath = $wgScriptPath;
 $wgDefaultSkin = 'vector';
 
 ## Timezone
-$wgLocaltimezone = 'Asia/Shanghai';
+$wgLocaltimezone = getenv('TZ');
 date_default_timezone_set($wgLocaltimezone);
 
 # Open external link in new tab
