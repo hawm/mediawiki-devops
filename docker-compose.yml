@@ -22,7 +22,6 @@ services:
       WIKI_DATABASE_NAME:
       WIKI_DATABASE_USER:
       WIKI_DATABASE_PASSWORD:
-  # command: apache2-foreground
     volumes:
       # maintenance scritp must run with database,
       # so we don't mount it under the dockerfile
