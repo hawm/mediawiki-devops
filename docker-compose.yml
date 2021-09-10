@@ -48,7 +48,6 @@ services:
     networks:
       - frontend
       - backend
-    #  - ipv6
     extra_hosts:
       - ${WIKI_HOST}:host-gateway
     depends_on:
@@ -142,11 +141,6 @@ networks:
   frontend:
     name: wiki_frontend
   backend:
-  ipv6:
-    enable_ipv6: true
-    ipam:
-      config:
-        - subnet: fd00:dead:beef::/48
 
 volumes:
   wiki-data:
