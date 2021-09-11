@@ -7,7 +7,6 @@ services:
       target: dev
     volumes:
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
-      - ./mediawiki/dev.htaccess:${MW_INSTALL_PATH}/.htaccess
     environment:
       WIKI_DEBUG:
       WIKI_DISABLE_CACHE:

@@ -39,3 +39,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     # Add sudo support
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
+# Make file change apply immediately
+# see https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq
+RUN echo 'opcache.revalidate_freq=0' \
+    >> /usr/local/etc/php/conf.d/opcache-recommended.ini
