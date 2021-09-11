@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# A shortcut for simplify the docker-compose workflow
-# Usage:
-# `./run.sh dev up -d` instead of 
+# A shortcut for docker-compose 
 # ```
 #   docker-compose \
 #   -f docker-coompose \
@@ -10,15 +8,39 @@
 #   --env-file .dev.env \
 #   up -d
 # ```
+# replace with:
+# `./compose dev up -d` 
 
 set -e
 
+usage(){
+    echo "Usage:"
+    echo "  ./compose <env> [options] [--] [COMMAND] [ARGS...]"
+    echo
+    docker-compose --help | sed -n '/^Options:$/, $p'
+}
+
+wrong_params(){
+    echo
+    usage
+    exit 1
+}
+
 check_file_exist(){
     if [[ ! -f $1 ]]; then
-        echo "file not found: $1"
-        exit 1
+        echo "ERROR: No such file: $1"
+        wrong_params
     fi
 }
+
+check_params(){
+    if [ $# -lt 1 ]; then
+        echo "ERROR: Missing env name"
+        wrong_params
+    fi
+}
+
+check_params "$@"
 
 env_compose_file="docker-compose.${1}.yml"
 env_file=".env.${1}"
