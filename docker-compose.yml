@@ -19,9 +19,12 @@ services:
       WIKI_SMTP_USERNAME:
       WIKI_SMTP_PASSWORD:
       WIKI_DATABASE_HOST:
+      WIKI_DATABASE_PORT:
       WIKI_DATABASE_NAME:
       WIKI_DATABASE_USER:
       WIKI_DATABASE_PASSWORD:
+      WIKI_REDIS_HOST:
+      WIKI_REDIS_PORT:
     volumes:
       # maintenance scritp must run with database,
       # so we don't mount it under the dockerfile
@@ -51,10 +54,10 @@ services:
     extra_hosts:
       - ${WIKI_HOST}:host-gateway
     depends_on:
-      - db-mariadb
-      - db-redis
+      - mariadb
+      - redis
 
-  db-mariadb:
+  mariadb:
     image: mariadb
     restart: always
     environment:
@@ -69,7 +72,7 @@ services:
     networks:
       - backend
 
-  db-redis:
+  redis:
     image: redis:alpine
     restart: always
     volumes:
@@ -128,6 +131,7 @@ services:
       RESTIC_BACKUP_OPTIONS:
       RESTIC_FORGET_OPTIONS:
       BACKUP_DATABASE_HOST: ${WIKI_DATABASE_HOST}
+      BACKUP_DATABASE_PORT: ${WIKI_DATABASE_PORT}
       BACKUP_DATABASE_NAME: ${WIKI_DATABASE_NAME}
       BACKUP_DATABASE_USER: root
       BACKUP_DATABASE_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}

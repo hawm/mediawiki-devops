@@ -1,7 +1,9 @@
 <?php
 $wgObjectCaches['redis'] = [
     'class' => 'RedisBagOStuff',
-    'servers' => ['db-redis:6379'],
+    'servers' => [
+        getenv('WIKI_REDIS_HOST').':'.getenv('WIKI_REDIS_PORT')
+    ],
     'persistent' => true,
 ];
 $wgMainCacheType = 'redis';

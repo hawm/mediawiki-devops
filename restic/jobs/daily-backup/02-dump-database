@@ -5,6 +5,7 @@ dump(){
     echo "Dumping database to '$1'..."
     mysqldump \
         --host="${BACKUP_DATABASE_HOST}" \
+        --port="${BACKUP_DATABASE_PORT}" \
         --user="${BACKUP_DATABASE_USER}" \
         --password="${BACKUP_DATABASE_PASSWORD}" \
         --single-transaction \

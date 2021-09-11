@@ -33,9 +33,9 @@ services:
     networks:
       - acme
     depends_on:
-      - acme-pebble
+      - pebble
 
-  acme-pebble:
+  pebble:
     image: letsencrypt/pebble
     # when container stop all account in memory will lost
     # that cause error to acme client which save account crendential already,
@@ -47,12 +47,10 @@ services:
       - ./pebble/my-pebble-config.json:/test/my-pebble-config.json
     networks:
       acme:
-        aliases:
-          - pebble
     extra_hosts:
       - ${WIKI_HOST}:host-gateway
 
-  mail-mailcatcher:
+  mailcatcher:
     image: sj26/mailcatcher:latest
     labels:
       traefik.enable: "true"
@@ -61,8 +59,6 @@ services:
       traefik.http.services.mailcatcher.loadbalancer.server.port: 1080
     networks:
       smtp:
-        aliases:
-          - mailcatcher
       frontend:
 
 volumes:
