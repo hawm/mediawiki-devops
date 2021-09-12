@@ -2,4 +2,6 @@
 
 echo
 echo
-echo "***Start at $(date)"
+echo "***Start backup at $(date)"
+echo "Waiting 10 seconds for cancel..."
+sleep 10
