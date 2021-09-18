@@ -1,21 +1,20 @@
 #!/bin/bash
 
 # A shortcut for docker-compose 
-# ```
-#   docker-compose \
+# Command: 
+# docker-compose \
 #   -f docker-coompose \
-#   -f docker-compose.dev.yml \
-#   --env-file .dev.env \
+#   -f docker-compose.$ENVNAME.yml \
+#   --env-file .dev.$ENVNAME \
 #   up -d
-# ```
-# replace with:
-# `./compose dev up -d` 
+# May shorten as:
+# ./compose $ENVNAME up -d
 
 set -e
 
 usage(){
     echo "Usage:"
-    echo "  ./compose <env> [options] [--] [COMMAND] [ARGS...]"
+    echo "  ./compose <ENVNAME> [options] [--] [COMMAND] [ARGS...]"
     echo
     docker-compose --help | sed -n '/^Options:$/, $p'
 }
