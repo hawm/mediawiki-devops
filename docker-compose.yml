@@ -67,8 +67,8 @@ services:
       MYSQL_PASSWORD: ${WIKI_DATABASE_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
     volumes:
-      - wiki-data:/var/lib/mysql
-      - wiki-data-dump:/docker-entrypoint-initdb.d
+      - wiki-database:/var/lib/mysql
+      - wiki-database-dump:/docker-entrypoint-initdb.d
     networks:
       - backend
 
@@ -113,30 +113,28 @@ services:
     networks:
       - frontend
 
-  restic:
+  rclone:
     profiles:
-      - autobackup
-    build: ./restic
-    hostname: restic
-    environment:
+      - rclone
+    build: ./rclone
+    environment: 
       TZ:
-      RESTIC_REPOSITORY:
-      RESTIC_PASSWORD:
-      AWS_ACCESS_KEY_ID:
-      AWS_SECRET_ACCESS_KEY:
-      AWS_DEFAULT_REGION:
-      BACKUP_CRON: 
-      RESTIC_OPTIONS:
-      RESTIC_BACKUP_OPTIONS:
-      RESTIC_FORGET_OPTIONS:
-      BACKUP_DATABASE_HOST: ${WIKI_DATABASE_HOST}
-      BACKUP_DATABASE_PORT: ${WIKI_DATABASE_PORT}
-      BACKUP_DATABASE_NAME: ${WIKI_DATABASE_NAME}
-      BACKUP_DATABASE_USER: root
-      BACKUP_DATABASE_PASSWORD: ${WIKI_DATABASE_ROOT_PASSWORD}
+      BACKUP_CRON:
+      BACKUP_OPTS:
+      BACKUP_DST:
+      BACKUP_SRC:
+      BACKUP_DATABASE_SRC:
+      BACKUP_UPLOAD_SRC:
+      BACKUP_LOCK_PATH:
+      BACKUP_DB_HOST: ${WIKI_DATABASE_HOST}
+      BACKUP_DB_PORT: ${WIKI_DATABASE_PORT}
+      BACKUP_DB_NAME: ${WIKI_DATABASE_NAME}
+      BAKCUP_DB_USER: ${WIKI_DATABASE_USER}
+      BACKUP_DB_PASS: ${WIKI_DATABASE_PASSWORD}
     volumes:
-      - wiki-upload:/data/upload
-      - wiki-data-dump:/data/database
+      - wiki-database-dump:${BACKUP_DATABASE_SRC}
+      - wiki-upload:${BACKUP_UPLOAD_SRC}
+      - backup-lock:${BACKUP_LOCK_PATH}
     networks:
       - backend
 
@@ -146,8 +144,9 @@ networks:
   backend:
 
 volumes:
-  wiki-data:
-  wiki-data-dump:
+  wiki-database:
+  wiki-database-dump:
   wiki-upload:
   acme-data:
   redis-data:
+  backup-lock:

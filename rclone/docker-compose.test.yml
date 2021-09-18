@@ -1,0 +1,38 @@
+# Test backup with cron
+services:
+  rclone:
+    build: .
+    volumes: 
+      - test-backup:${BACKUP_DST}
+      - test-upload:${BACKUP_UPLOAD_SRC}
+      - test-database-dump:${BACKUP_DATABASE_SRC}
+      - test-lock:${BACKUP_LOCK_PATH}
+      - ./scripts:/scripts
+    environment: 
+      BACKUP_CRON:
+      BACKUP_OPTS:
+      BACKUP_DST:
+      BACKUP_SRC:
+      BACKUP_DATABASE_SRC:
+      BACKUP_UPLOAD_SRC:
+      BACKUP_LOCK_PATH: 
+      BACKUP_DB_HOST: mariadb
+      BACKUP_DB_PORT: 3306
+      BACKUP_DB_NAME: ${DB_NAME}
+      BACKUP_DB_USER: ${DB_USER}
+      BACKUP_DB_PASS: ${DB_PASS}
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb
+    environment: 
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+
+volumes: 
+  test-backup:
+  test-upload:
+  test-database-dump:
+  test-lock:

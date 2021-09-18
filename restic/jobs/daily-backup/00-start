@@ -1,7 +1,0 @@
-#!/bin/sh
-
-echo
-echo
-echo "***Start backup at $(date)"
-echo "Waiting 10 seconds for cancel..."
-sleep 10
