@@ -61,6 +61,7 @@ services:
     image: mariadb
     restart: always
     environment:
+      TZ:
       # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
       MYSQL_DATABASE: ${WIKI_DATABASE_NAME}
       MYSQL_USER: ${WIKI_DATABASE_USER}
