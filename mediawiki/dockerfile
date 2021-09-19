@@ -22,10 +22,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 # Copy Comopser config
 COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 # Install extension by Composer
-# The later update command install requirements 
-# for extensions just installed by the early  update command
+# Update command for install/download extensions define in composer.local.json
+# Install command for install dependencies for extensions not provide composer package
 RUN composer update --no-dev \
-    && composer update --no-dev
+    && composer install --no-dev
 
 FROM prod as dev
 RUN apt-get update && apt-get install -y sudo 
