@@ -4,7 +4,7 @@ Make sure you have already installed both Docker Engine and Docker Compose.
 1. Clone this reop to local.
 2. Create a `.env.$ENVNAME` file, `.env.dev` as a example.
 3. Install MediaWiki  
-   `./compose $ENVNAMENAME run mediawiki mwinstall`.
+   `docker-compose --env-file .env.$ENVNAME run mediawiki mwinstall`
 
 # Uninstall
 **NOTE**: Database and uploads will be delete, your local data will lost.
