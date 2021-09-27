@@ -54,7 +54,7 @@ services:
     image: sj26/mailcatcher:latest
     labels:
       traefik.enable: "true"
-      traefik.http.routers.mailcatcher.rule: Host(`mailcatcher.localhost`)
+      traefik.http.routers.mailcatcher.rule: Host(`${MAILCATCHER_HOST}`)
       traefik.http.routers.mailcatcher.entrypoints: web
       traefik.http.services.mailcatcher.loadbalancer.server.port: 1080
     networks:
