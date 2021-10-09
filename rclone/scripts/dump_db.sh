@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+# $1 is then filename database will be dump to without extension
+
 dump_db(){
     echo "Dump database to '$1.sql'..."
     mkdir -p "$(dirname "$1")"

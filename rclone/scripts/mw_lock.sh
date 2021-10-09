@@ -1,5 +1,8 @@
 #!/usr/bin/env sh
 
+# $1 is the absolute path  of lock file name
+# $2 is the content will be wirte to lock file
+
 mw_lock(){
     if [ -s "$1" ]
     then

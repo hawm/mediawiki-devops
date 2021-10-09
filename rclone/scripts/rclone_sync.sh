@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 
+# $1 is ths source of rclone sync
+# $2 is the destination of rclone sync
+# $3 is the options or flags
+# see also https://rclone.org/commands/rclone_sync/
+
 rclone_sync(){
     # shellcheck disable=2086
     rclone sync "$1" "$2" $3
