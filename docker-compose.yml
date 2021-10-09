@@ -25,6 +25,7 @@ services:
       WIKI_DATABASE_PASSWORD:
       WIKI_REDIS_HOST:
       WIKI_REDIS_PORT:
+      WIKI_READONLYFILE_PATH: ${BACKUP_LOCK_PATH-/var/lock/backup}
     volumes:
       # maintenance scritp must run with database,
       # so we don't mount it under the dockerfile
@@ -39,6 +40,8 @@ services:
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
       # favicon
       - ./mediawiki/favicon.ico:${MW_INSTALL_PATH}/favicon.ico
+      # backup
+      - backup-lock:${BACKUP_LOCK_PATH-/var/lock/backup}
     labels:
       traefik.enable: "true"
       traefik.http.routers.wiki-secure.rule: Host(`${WIKI_HOST}`)
