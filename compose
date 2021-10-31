@@ -5,7 +5,7 @@
 # docker-compose \
 #   -f docker-coompose \
 #   -f docker-compose.$ENVNAME.yml \
-#   --env-file .dev.$ENVNAME \
+#   --env-file .env.$ENVNAME \
 #   up -d
 # May shorten as:
 # ./compose $ENVNAME up -d
