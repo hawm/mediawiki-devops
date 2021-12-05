@@ -2,23 +2,5 @@ FROM rclone/rclone:latest
 
 RUN apk --no-cache add mariadb-client
 
-ENV TZ="Asia/Shanghai"
-# https://rclone.org/docs/#connection-strings
-ENV BACKUP_DST="/srv/backup"
-ENV BACKUP_SRC="/data"
-ENV BACKUP_DATABASE_SRC="$BACKUP_SRC/database"
-ENV BACKUP_UPLOAD_SRC="$BACKUP_SRC/upload"
-ENV BACKUP_OPTS="--verbose"
-ENV BACKUP_DB_HOST=
-ENV BACKUP_DB_PORT=
-ENV BACKUP_DB_NAME=
-ENV BACKUP_DB_USER=
-ENV BACKUP_DB_PASS=
-ENV BACKUP_CRON="0 2 * * *"
-ENV BACKUP_LOCK_PATH="/var/lock/backup"
-ENV BACKUP_SCRIPT_PATH="/scripts"
-
-COPY scripts $BACKUP_SCRIPT_PATH
-ENTRYPOINT []
-CMD sh $BACKUP_SCRIPT_PATH/set_backup_cron.sh \
-    && crond -l 2 -f
+COPY ./entrypoint.sh /
+ENTRYPOINT ["sh", "/entrypoint.sh"]

@@ -5,3 +5,4 @@ $wgDeprecationReleaseLimit = '1.30';
 enableSemantics(getenv('WIKI_HOST'));
 $smwgMainCacheType = 'redis';
 $smwgQueryResultCacheType = 'redis';
+$smwgConfigFileDir = getenv('MW_INSTALL_PATH').'/images';

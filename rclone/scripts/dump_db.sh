@@ -1,27 +1,29 @@
 #!/usr/bin/env sh
 
-# $1 is then filename database will be dump to without extension
 
 dump_db(){
-    echo "Dump database to '$1.sql'..."
-    mkdir -p "$(dirname "$1")"
+    # $1 is database host
+    # $2 is database port
+    # $3 is database user
+    # $4 is database password
+    # $5 is database name
+    # $6 is the filename that database will be dump to without extension name
+    if [ "$#" -ne 6 ]
+    then
+        echo "Wrong arguments number"
+        echo "Need 6 arguments but get $#"
+        exit 1
+    fi
+    echo "Dumping database to '$6.sql'..."
+    mkdir -p "$(dirname "$6")"
     mysqldump \
-        --host="$BACKUP_DB_HOST" \
-        --port="$BACKUP_DB_PORT" \
-        --user="$BACKUP_DB_USER" \
-        --password="$BACKUP_DB_PASS" \
+        --host="$1" \
+        --port="$2" \
+        --user="$3" \
+        --password="$4" \
+        --databases "$5" \
         --single-transaction \
-        "$BACKUP_DB_NAME" \
-        > "$1.sql"
-    dump_statu=$?
+        > "$6.sql"
     # Exit codes
     # https://github.com/twitter-forks/mysql/blob/master/client/mysqldump.c#L58
-    case $dump_statu in
-        0)
-            # dump succeeded, do nothing
-            ;;
-        *)
-            echo "ERROR: mysqldump exit: $dump_statu"
-            exit $dump_statu
-    esac
 }

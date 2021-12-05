@@ -7,10 +7,16 @@
 #   -f docker-compose.$ENVNAME.yml \
 #   --env-file .env.$ENVNAME \
 #   up -d
-# May shorten as:
+# be shorten as:
 # ./compose $ENVNAME up -d
+#
+# When pass test as envname to this scrpt that will
+# auto prepend the dev compose file to the
+# docker-compose using `-f` flag 
 
 set -e
+
+dev_env_name="dev"
 
 usage(){
     echo "Usage:"
@@ -39,16 +45,35 @@ check_params(){
     fi
 }
 
+check_env(){
+    env_name=${1}
+
+    env_compose_file="docker-compose.${env_name}.yml"
+    env_file=".env.${env_name}"
+
+    check_file_exist "$env_compose_file"
+    check_file_exist "$env_file"
+
+    # prepend dev env when test
+    if [ "$env_name" = "test" ]; then
+        env_compose_file_prepend="docker-compose.${dev_env_name}.yml"
+        check_file_exist "${env_compose_file_prepend}"
+        prepend_cmd="-f ${env_compose_file_prepend}"
+    fi
+}
+
+execute(){
+    # shellcheck disable=2086
+    docker-compose \
+        -f docker-compose.yml \
+        $prepend_cmd \
+        -f "$env_compose_file" \
+        --env-file "$env_file" \
+        "${@:2}"
+}
+
 check_params "$@"
 
-env_compose_file="docker-compose.${1}.yml"
-env_file=".env.${1}"
+check_env "$1"
 
-check_file_exist "$env_compose_file"
-check_file_exist "$env_file"
-
-docker-compose \
-    -f docker-compose.yml \
-    -f "$env_compose_file" \
-    --env-file "$env_file" \
-    "${@:2}"
+execute "$@"

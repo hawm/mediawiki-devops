@@ -25,13 +25,11 @@ services:
       WIKI_DATABASE_PASSWORD:
       WIKI_REDIS_HOST:
       WIKI_REDIS_PORT:
-      WIKI_READONLYFILE_PATH: ${BACKUP_LOCK_PATH-/var/lock/backup}
+      WIKI_READONLYFILE_PATH: ${BACKUP_LOCK_DIR}
+      WIKI_SCRIPT_DIR:
     volumes:
-      # maintenance scritp must run with database,
-      # so we don't mount it under the dockerfile
-      - ./mediawiki/maintenance:/usr/local/mwmaintenance
-      # uploads
-      - wiki-upload:/var/www/html/images
+      # maintaince scripts
+      - ./mediawiki/scripts:${WIKI_SCRIPT_DIR}
       # settings
       - ./mediawiki/settings:${MW_INSTALL_PATH}/settings
       # apache
@@ -40,8 +38,10 @@ services:
       - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
       # favicon
       - ./mediawiki/favicon.ico:${MW_INSTALL_PATH}/favicon.ico
-      # backup
-      - backup-lock:${BACKUP_LOCK_PATH-/var/lock/backup}
+      # uploads
+      - wiki-upload:${MW_INSTALL_PATH}/images
+      # lock
+      - wiki-lock:${BACKUP_LOCK_DIR}
     labels:
       traefik.enable: "true"
       traefik.http.routers.wiki-secure.rule: Host(`${WIKI_HOST}`)
@@ -52,8 +52,9 @@ services:
       traefik.http.routers.wiki.entrypoints: web
       traefik.http.middlewares.wiki.redirectscheme.scheme: https
     networks:
-      - frontend
-      - backend
+      - web
+      - database
+      - cache
     extra_hosts:
       - ${WIKI_HOST}:host-gateway
     depends_on:
@@ -74,7 +75,7 @@ services:
       - wiki-database:/var/lib/mysql
       - wiki-database-dump:/docker-entrypoint-initdb.d
     networks:
-      - backend
+      - database
 
   redis:
     image: redis:alpine
@@ -84,17 +85,22 @@ services:
       - ./redis/conf:/usr/local/etc/redis
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
-      - backend
+      - cache
 
   overcommit:
+    image: alpine:latest
     profiles:
       - overcommit
-    build:
-      context: ./overcommit
     restart: "no"
-    privileged: "true"
+    privileged: true
     volumes:
       - /proc/sys/vm:/mnt/vm
+    command: >
+      sh -c "
+      echo 1 > /mnt/vm/overcommit_memory 
+      && echo overcommit statu: 
+      && cat /mnt/vm/overcommit_memory
+      "
 
   traefik:
     image: traefik:latest
@@ -105,7 +111,7 @@ services:
     environment:
       TRAEFIK_PROVIDERS_DOCKER: "true"
       TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT: "false"
-      TRAEFIK_PROVIDERS_DOCKER_NETWORK: wiki_frontend
+      TRAEFIK_PROVIDERS_DOCKER_NETWORK: traefik
       TRAEFIK_ENTRYPOINTS_web_ADDRESS: :80
       TRAEFIK_ENTRYPOINTS_websecure_ADDRESS: :443
       TRAEFIK_CERTIFICATESRESOLVERS_letsencrypt_ACME_TLSCHALLENGE: "true"
@@ -115,11 +121,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme-data:/etc/traefik/acme
     networks:
-      - frontend
+      - web
 
   rclone:
     profiles:
-      - rclone
+      - autobackup
     build: ./rclone
     environment: 
       TZ:
@@ -127,30 +133,36 @@ services:
       BACKUP_OPTS:
       BACKUP_DST:
       BACKUP_SRC:
-      BACKUP_DATABASE_SRC:
-      BACKUP_UPLOAD_SRC:
-      BACKUP_LOCK_PATH:
+      BACKUP_LOCK_DIR:
       BACKUP_DB_HOST: ${WIKI_DATABASE_HOST}
       BACKUP_DB_PORT: ${WIKI_DATABASE_PORT}
       BACKUP_DB_NAME: ${WIKI_DATABASE_NAME}
       BAKCUP_DB_USER: ${WIKI_DATABASE_USER}
       BACKUP_DB_PASS: ${WIKI_DATABASE_PASSWORD}
+      BACKUP_SCRIPT_DIR:
+    command: >
+     sh -c "
+     sh ${BACKUP_SCRIPT_DIR}/set_backup_cron.sh 
+     && crond -l 2 -f
+     "
     volumes:
-      - wiki-database-dump:${BACKUP_DATABASE_SRC}
-      - wiki-upload:${BACKUP_UPLOAD_SRC}
-      - backup-lock:${BACKUP_LOCK_PATH}
+      - ./rclone/scripts:${BACKUP_SCRIPT_DIR}
+      - wiki-database-dump:${BACKUP_SRC}/database
+      - wiki-upload:${BACKUP_SRC}/upload
+      - wiki-lock:${BACKUP_LOCK_DIR}
     networks:
-      - backend
+      - database
 
 networks:
-  frontend:
-    name: wiki_frontend
-  backend:
+  web:
+    name: traefik
+  database:
+  cache:
 
 volumes:
   wiki-database:
   wiki-database-dump:
   wiki-upload:
+  wiki-lock:
   acme-data:
   redis-data:
-  backup-lock:

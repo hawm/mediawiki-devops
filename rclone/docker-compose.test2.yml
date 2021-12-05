@@ -1,4 +1,0 @@
-# Test backup without cron
-services:
-  rclone:
-    command: sh -c 'sleep 5 && sh /scripts/backup.sh'

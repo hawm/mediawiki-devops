@@ -27,6 +27,10 @@ COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 RUN composer update --no-dev \
     && composer install --no-dev
 
+COPY ./entrypoint.sh /
+ENTRYPOINT [ "sh", "/entrypoint.sh" ]
+CMD ["apache2-foreground"]
+
 FROM prod as dev
 RUN apt-get update && apt-get install -y sudo 
 # Create user for development
@@ -43,3 +47,4 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # see https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq
 RUN echo 'opcache.revalidate_freq=0' \
     >> /usr/local/etc/php/conf.d/opcache-recommended.ini
+
