@@ -5,6 +5,8 @@ services:
     build:
       context: ./mediawiki
       target: prod
+    command: 
+      - apache2-foreground
     restart: always
     environment:
       TZ:

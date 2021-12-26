@@ -1,7 +1,5 @@
-FROM mediawiki:1.36 AS prod
+FROM mediawiki:1.36 as base
 ENV MW_INSTALL_PATH=/var/www/html
-# add maintenance script path
-ENV PATH="/usr/local/mwmaintenance:$PATH"
 # Install system requirements
 RUN apt-get update && apt-get install -y \
     libzip-dev \
@@ -17,8 +15,6 @@ RUN pecl install redis \
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/var/composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-# Config mirror
-#RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 # Copy Comopser config
 COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 # Install extension by Composer
@@ -26,10 +22,10 @@ COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 # Install command for install dependencies for extensions not provide composer package
 RUN composer update --no-dev \
     && composer install --no-dev
-
 COPY ./entrypoint.sh /
 ENTRYPOINT [ "sh", "/entrypoint.sh" ]
-CMD ["apache2-foreground"]
+
+FROM base as prod
 
 FROM prod as dev
 RUN apt-get update && apt-get install -y sudo 
@@ -47,4 +43,3 @@ RUN groupadd --gid $USER_GID $USERNAME \
 # see https://www.php.net/manual/en/opcache.configuration.php#ini.opcache.revalidate-freq
 RUN echo 'opcache.revalidate_freq=0' \
     >> /usr/local/etc/php/conf.d/opcache-recommended.ini
-
