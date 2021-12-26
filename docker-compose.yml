@@ -127,6 +127,7 @@ services:
     profiles:
       - autobackup
     build: ./rclone
+    restart: on-failure:5
     environment: 
       TZ:
       BACKUP_CRON:

@@ -5,6 +5,7 @@ services:
     build:
       context: ./mediawiki
       target: dev
+    restart: no
     volumes:
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php
     environment:
@@ -14,8 +15,15 @@ services:
       traefik.http.routers.wiki-secure.tls.certresolver: pebble
     networks:
       - smtp
- 
+
+  mariadb:
+    restart: no
+
+  redis:
+    restart: no
+
   traefik:
+    restart: no
     environment:
       TRAEFIK_LOG_LEVEL: DEBUG
       TRAEFIK_API_DASHBOARD: "true"
@@ -106,6 +114,7 @@ services:
       - s3
 
   rclone:
+    restart: no
     environment:
       BACKUP_DST: :s3,provider={S3_PROVIDER},env_auth=false,endpoint="${S3_ENDPOINT}",access_key_id=${S3_ACCESS_KEY_ID},secret_access_key=${S3_SECRET_ACCESS_KEY}:${S3_BUCKET}
     networks:
