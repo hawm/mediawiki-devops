@@ -27,7 +27,7 @@ services:
       WIKI_DATABASE_PASSWORD:
       WIKI_REDIS_HOST:
       WIKI_REDIS_PORT:
-      WIKI_READONLYFILE_PATH: ${BACKUP_LOCK_DIR}
+      WIKI_READONLYFILE_PATH: ${BACKUP_LOCK_DIR}/lock
       WIKI_SCRIPT_DIR:
     volumes:
       # maintaince scripts
