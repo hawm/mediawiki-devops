@@ -1,0 +1,9 @@
+services:
+  test:
+    build: ./test
+    networks:
+      - web
+      - database
+      - cache
+    volumes:
+      - 
