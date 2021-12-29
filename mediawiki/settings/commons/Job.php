@@ -2,7 +2,7 @@
 
 $wgJobTypeConf['default'] = [
     'class'          => 'JobQueueRedis',
-    'redisServer'    => getenv('WIKI_REDIS_HOST').':'.getenv('WIKI_REDIS_PORT'),
+    'redisServer'    => getenv('REDIS_HOST').':'.getenv('REDIS_PORT'),
     'redisConfig'    => [],
     'claimTTL'       => 3600,
     'daemonized'     => true

@@ -2,7 +2,7 @@
 $wgObjectCaches['redis'] = [
     'class' => 'RedisBagOStuff',
     'servers' => [
-        getenv('WIKI_REDIS_HOST').':'.getenv('WIKI_REDIS_PORT')
+        getenv('REDIS_HOST').':'.getenv('REDIS_PORT')
     ],
     'persistent' => true,
 ];
