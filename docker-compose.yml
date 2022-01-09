@@ -22,28 +22,29 @@ services:
       SMTP_PASSWORD:
       MARIADB_HOST:
       MARIADB_PORT:
-      MARIADB_DATABASE_NAME:
-      MARIADB_DATABASE_USER:
-      MARIADB_DATABASE_PASSWORD:
+      MARIADB_DATABASE:
+      MARIADB_USER:
+      MARIADB_PASSWORD:
       REDIS_HOST:
       REDIS_PORT:
-      WIKI_READONLYFILE_PATH: ${BACKUP_LOCK_DIR}/lock
+      WIKI_READONLYFILE_PATH: ${LOCK_DIR}/lock
       WIKI_SCRIPT_DIR:
     volumes:
       # maintaince scripts
-      - ./mediawiki/scripts:${WIKI_SCRIPT_DIR}
+      - ./mediawiki/scripts:${WIKI_SCRIPT_DIR}:ro
       # settings
-      - ./mediawiki/settings:${MW_INSTALL_PATH}/settings
+      - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php:ro
+      - ./mediawiki/settings:${MW_INSTALL_PATH}/settings:ro
       # apache
-      - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess
+      - ./mediawiki/.htaccess:${MW_INSTALL_PATH}/.htaccess:ro
       # robots
-      - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt
+      - ./mediawiki/robots.txt:${MW_INSTALL_PATH}/robots.txt:ro
       # favicon
-      - ./mediawiki/favicon.ico:${MW_INSTALL_PATH}/favicon.ico
+      - ./mediawiki/favicon.ico:${MW_INSTALL_PATH}/favicon.ico:ro
       # uploads
       - wiki-upload:${MW_INSTALL_PATH}/images
       # lock
-      - wiki-lock:${BACKUP_LOCK_DIR}
+      - wiki-lock:${LOCK_DIR}
     labels:
       traefik.enable: "true"
       traefik.http.routers.wiki-secure.rule: Host(`${WIKI_HOST}`)
@@ -64,18 +65,18 @@ services:
       - redis
 
   mariadb:
-    image: mariadb
+    build: mariadb
     restart: always
     environment:
-      TZ:
       # @see https://phabricator.wikimedia.org/source/mediawiki/browse/master/includes/DefaultSettings.php
-      MYSQL_DATABASE: ${MARIADB_DATABASE_NAME}
-      MYSQL_USER: ${MARIADB_DATABASE_USER}
-      MYSQL_PASSWORD: ${MARIADB_DATABASE_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      TZ:
+      MARIADB_DATABASE:
+      MARIADB_USER:
+      MARIADB_PASSWORD:
+      MARIADB_ROOT_PASSWORD:
     volumes:
       - wiki-database:/var/lib/mysql
-      - wiki-database-dump:/docker-entrypoint-initdb.d
+      - wiki-database-dump:/var/mysqldump
     networks:
       - database
 
@@ -84,7 +85,7 @@ services:
     restart: always
     volumes:
       - redis-data:/data
-      - ./redis/conf:/usr/local/etc/redis
+      - ./redis/conf:/usr/local/etc/redis:ro
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
       - cache
@@ -127,34 +128,16 @@ services:
 
   rclone:
     profiles:
-      - autobackup
-    build: ./rclone
-    restart: on-failure:5
+      - rclone
+    build: rclone
     environment: 
       TZ:
-      BACKUP_CRON:
-      BACKUP_OPTS:
       BACKUP_DST:
-      BACKUP_SRC:
-      BACKUP_LOCK_DIR:
-      BACKUP_DB_HOST: ${MARIADB_HOST}
-      BACKUP_DB_PORT: ${MARIADB_PORT}
-      BACKUP_DB_NAME: ${MARIADB_DATABASE_NAME}
-      BAKCUP_DB_USER: ${MARIADB_DATABASE_USER}
-      BACKUP_DB_PASS: ${MARIADB_DATABASE_PASSWORD}
-      BACKUP_SCRIPT_DIR:
-    command: >
-     sh -c "
-     sh ${BACKUP_SCRIPT_DIR}/set_backup_cron.sh 
-     && crond -l 2 -f
-     "
+      BACKUP_OPTS:
     volumes:
-      - ./rclone/scripts:${BACKUP_SCRIPT_DIR}
-      - wiki-database-dump:${BACKUP_SRC}/database
-      - wiki-upload:${BACKUP_SRC}/upload
-      - wiki-lock:${BACKUP_LOCK_DIR}
-    networks:
-      - database
+      - wiki-database-dump:/data/database
+      - wiki-upload:/data/upload
+      - wiki-backup:/var/backups/mediawiki
 
 networks:
   web:
@@ -166,6 +149,7 @@ volumes:
   wiki-database:
   wiki-database-dump:
   wiki-upload:
+  wiki-backup:
   wiki-lock:
   acme-data:
   redis-data:

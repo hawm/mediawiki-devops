@@ -1,79 +1,65 @@
-#!/bin/bash
-
-# A shortcut for docker-compose 
-# Command: 
-# docker-compose \
-#   -f docker-coompose \
-#   -f docker-compose.$ENVNAME.yml \
-#   --env-file $ENVNAME.env \
-#   up -d
-# be shorten as:
-# ./compose $ENVNAME up -d
-#
-# When pass test as envname to this scrpt that will
-# auto prepend the dev compose file to the
-# docker-compose using `-f` flag 
+#!/usr/bin/env bash
 
 set -e
 
-dev_env_name="dev"
-
 usage(){
     echo "Usage:"
-    echo "  ./compose <ENVNAME> [options] [--] [COMMAND] [ARGS...]"
+    echo "  ./compose [any docker-compose options or command and arguments]"
     echo
-    docker-compose --help | sed -n '/^Options:$/, $p'
-}
-
-wrong_params(){
+    echo "Description:"
+    echo "  This is a wrapper for docker-compose toauto preface the compose file from the \$APP_ENV environment variable."
     echo
-    usage
-    exit 1
+    echo "For example: " 
+    echo "
+    docker-compose \\
+        --file docker-compose.yml \\
+        --file docker-compose.\$COMPOSE_MODE_in_env_file.yml \\
+        --env-file configs/\$APP_ENV.env \\
+        up -d"
+    echo
+    echo "May be shortend as: "
+    echo "
+    APP_ENV=dev ./compose up -d"
+    echo
 }
 
-check_file_exist(){
-    if [[ ! -f $1 ]]; then
-        echo "ERROR: No such file: $1"
-        wrong_params
+ensure_file(){
+    if [[ ! -f "$1" ]]; then
+        echo "ERROR: No such file $1"
     fi
 }
 
-check_params(){
-    if [ $# -lt 1 ]; then
-        echo "ERROR: Missing env name"
-        wrong_params
-    fi
-}
+prepare_env(){
+    env_config_file="$APP_DIR/$APP_ENV.env"
+    ensure_file "$env_config_file"
 
-check_env(){
-    env_name=${1}
-
-    env_compose_file="docker-compose.${env_name}.yml"
-    env_file="${env_name}.env"
-
-    check_file_exist "$env_compose_file"
-    check_file_exist "$env_file"
-
-    # prepend dev env when test
-    if [ "$env_name" = "test" ]; then
-        env_compose_file_prepend="docker-compose.${dev_env_name}.yml"
-        check_file_exist "${env_compose_file_prepend}"
-        prepend_cmd="-f ${env_compose_file_prepend}"
-    fi
+    # get ENV variable from config file 
+    COMPOSE_MODE=$(sed -n 's/^COMPOSE_MODE=//p' "$env_config_file")
+    
+    env_compose_file="$APP_DIR/docker-compose.$COMPOSE_MODE.yml"
+    ensure_file "$env_compose_file"
 }
 
 execute(){
     # shellcheck disable=2086
     docker-compose \
-        -f docker-compose.yml \
-        $prepend_cmd \
-        -f "$env_compose_file" \
-        --env-file "$env_file" \
-        "${@:2}"
+        --file "$APP_DIR/docker-compose.yml" \
+        --file "$env_compose_file" \
+        --env-file "$env_config_file" \
+        "$@"
 }
 
-check_params "$@"
+if [ -z "$APP_DIR" ]
+then
+    APP_DIR=$(dirname "$(readlink -f "$0")")
+fi
 
-check_env "$1"
+case "$1" in 
+    -h|--help)
+        usage
+        exit 0
+        ;;
+esac
 
+prepare_env
 execute "$@"

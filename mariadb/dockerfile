@@ -1,0 +1,7 @@
+FROM mariadb:10
+
+ENV MYSQLDUMP_PATH=/var/mysqldump
+
+VOLUME ${MYSQLDUMP_PATH}
+
+COPY bin /usr/local/bin

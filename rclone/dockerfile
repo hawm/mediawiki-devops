@@ -1,6 +1,9 @@
 FROM rclone/rclone:latest
 
-RUN apk --no-cache add mariadb-client
+ENV BACKUP_SRC=/data
+ENV BACKUP_DST=/srv/backup
+ENV BACKUP_OPTS="--verbose"
 
-COPY ./entrypoint.sh /
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+COPY bin /usr/local/bin
+
+ENTRYPOINT []
