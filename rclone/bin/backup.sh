@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Rclone Syncing!"
+echo "Rclone Syncing..."
 
 rclone sync \
     --dry-run \
