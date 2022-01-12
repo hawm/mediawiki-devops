@@ -27,7 +27,7 @@ services:
       MARIADB_PASSWORD:
       REDIS_HOST:
       REDIS_PORT:
-      WIKI_READONLYFILE_PATH: ${LOCK_DIR}/lock
+      WIKI_READONLYFILE_PATH: $/var/lock/mediawiki/lock
     volumes:
       # settings
       - ./mediawiki/LocalSettings.php:${MW_INSTALL_PATH}/LocalSettings.php:ro
@@ -41,7 +41,7 @@ services:
       # uploads
       - wiki-upload:${MW_INSTALL_PATH}/images
       # lock
-      - wiki-lock:${LOCK_DIR}
+      - wiki-lock:/var/lock/mediawiki/
     labels:
       traefik.enable: "true"
       traefik.http.routers.wiki-secure.rule: Host(`${WIKI_HOST}`)
