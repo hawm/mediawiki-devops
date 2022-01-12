@@ -33,7 +33,7 @@ usage(){
     echo
     echo "May be shortend as: "
     echo "
-    APP_ENV=dev ./compose up -d"
+    APP_ENV=dev ./launcher compose up -d"
     echo
 }
 
