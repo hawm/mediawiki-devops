@@ -22,8 +22,7 @@ COPY ./composer.local.json $MW_INSTALL_PATH/composer.local.json
 # Install command for install dependencies for extensions not provide composer package
 RUN composer update --no-dev \
     && composer install --no-dev
-COPY entrypoint.sh /
-ENTRYPOINT [ "/entrypoint.sh" ]
+COPY bin /usr/local/bin
 
 FROM base as prod
 
