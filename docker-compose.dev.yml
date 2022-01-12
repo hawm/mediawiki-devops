@@ -3,7 +3,7 @@ version: "3"
 services:
   mediawiki:
     build:
-      context: ./mediawiki
+      context: mediawiki
       target: dev
     restart: 'no'
     environment:
