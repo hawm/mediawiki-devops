@@ -12,6 +12,7 @@ usage(){
     echo "  ./launcher <command>"
     echo "Commands: "
     echo "  help        print this help"
+    echo "  info        print launcher info"
     echo "  backup      make a backup to remote"
     echo "  restore     restore from remote backup"
     echo "  compose     compose is a wrapper for docker-compose to auto preface the compose and env file base on the \$APP_ENV environment variable."
@@ -28,6 +29,11 @@ usage(){
     echo "
     APP_ENV=dev ./compose up -d"
     echo
+}
+
+info(){
+    echo "APP_DIR=$APP_DIR"
+    echo "APP_ENV=$APP_ENV"
 }
 
 ensure_file(){
@@ -112,7 +118,7 @@ case "$1" in
     help)
         usage
         ;;
-    backup|restore|compose)
+    backup|restore|compose|info)
         "$@"
         ;;
     *)
