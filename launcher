@@ -7,6 +7,12 @@ then
     APP_DIR=$(dirname "$(readlink -f "$0")")
 fi
 
+if [ -z "$APP_ENV" ]
+then
+    echo "Please set \$APP_ENV"
+    exit 1
+fi
+
 usage(){
     echo "Usage:"
     echo "  ./launcher <command>"
