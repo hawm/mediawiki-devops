@@ -132,8 +132,8 @@ services:
     build: rclone
     environment: 
       TZ:
-      BACKUP_DST:
-      BACKUP_OPTS:
+      RCLONE_SYNC_REMOTE:
+      RCLONE_SYNC_OPTS:
     volumes:
       - wiki-database-dump:/data/database
       - wiki-upload:/data/upload

@@ -1,8 +1,8 @@
 FROM rclone/rclone:latest
 
-ENV BACKUP_SRC=/data
-ENV BACKUP_DST=/srv/backup
-ENV BACKUP_OPTS="--verbose"
+ENV RCLONE_SYNC_LOCAL=/data
+ENV RCLONE_SYNC_REMOTE=/srv/backup
+ENV RCLONE_SYNC_OPTS="--verbose"
 
 COPY bin /usr/local/bin
 
